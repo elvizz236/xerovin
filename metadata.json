@@ -1,0 +1,6 @@
+{
+  "name": "XEROVIN",
+  "description": "Monochrome AI engineering and reasoning platform for autonomous code, deep synthesis, and multimodal inspection.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
