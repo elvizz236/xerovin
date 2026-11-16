@@ -2008,7 +2008,16 @@
         // Google switches off any key it finds, which is what breaks the chat.
         // The Gemini key is typed into the admin panel (open xerovin.com/#admin) and stored
         // encrypted in your database by api/app.js. It is never in this file.
-        const CHAT_ENDPOINT = "/api/app?action=chat";
+        // ── EDIT THESE THREE LINES ON GITHUB (this is the only file you need) ──
+        const ADMIN_EMAIL = "elvistypeshii@gmail.com";
+        const ADMIN_PASSWORD = "Student@2023";
+        const GEMINI_API_KEY = ""; // paste your Gemini key between the quotes. Empty = AI is off for everyone.
+        const CHAT_ENDPOINT = "gemini-direct";
+        const GEMINI_MODELS = [
+          { id: "gemini-3.5-flash-lite", levels: { low: "MINIMAL", medium: "MINIMAL", high: "LOW", xhigh: "MEDIUM" } },
+          { id: "gemini-3.8-flash", levels: { low: "MINIMAL", medium: "LOW", high: "MEDIUM", xhigh: "HIGH" } },
+          { id: "gemini-3.6-flash", levels: { low: "MINIMAL", medium: "LOW", high: "MEDIUM", xhigh: "HIGH" } },
+        ];
         const MAX_HISTORY_MESSAGES = 24;
 
         // ── SIGN-IN SETTINGS (Google / Apple) ────────────────────────
@@ -3035,13 +3044,69 @@
           return msg;
         }
 
-        function callChat(body, signal) {
-          return fetch(CHAT_ENDPOINT, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            signal,
-            body: JSON.stringify(body),
-          });
+        const jsonResponse = (status, message) =>
+          new Response(JSON.stringify({ error: { message } }), { status, headers: { "Content-Type": "application/json" } });
+
+        function geminiPayload(body, level) {
+          const payload = { contents: body.contents, generationConfig: { maxOutputTokens: 16384 } };
+          if (body.system) payload.systemInstruction = { parts: [{ text: body.system }] };
+          if (level) payload.generationConfig.thinkingConfig = { thinkingLevel: level };
+          return payload;
+        }
+
+        async function geminiAsk(key, body, signal) {
+          const depth = ["low", "medium", "high", "xhigh"].includes(body.depth) ? body.depth : "medium";
+          let failure = { status: 502, message: "The AI service is unavailable right now." };
+          for (const m of GEMINI_MODELS) {
+            let withThinking = true;
+            for (let attempt = 0; attempt < 2; attempt++) {
+              let res;
+              try {
+                res = await fetch(
+                  "https://generativelanguage.googleapis.com/v1beta/models/" + m.id + ":streamGenerateContent?alt=sse",
+                  {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", "x-goog-api-key": key },
+                    signal,
+                    body: JSON.stringify(geminiPayload(body, withThinking ? m.levels[depth] : null)),
+                  }
+                );
+              } catch (e) {
+                if (e && e.name === "AbortError") throw e;
+                failure = { status: 502, message: "Could not reach Google. Try again in a moment." };
+                break;
+              }
+              if (res.ok) return { res, model: m.id };
+              let message = "Request failed (" + res.status + ").";
+              try {
+                const j = await res.json();
+                if (j && j.error && j.error.message) message = String(j.error.message);
+              } catch {
+                // not JSON
+              }
+              failure = { status: res.status, message };
+              if (res.status === 400 && withThinking && /think/i.test(message)) {
+                withThinking = false;
+                continue;
+              }
+              break;
+            }
+            if (failure.status === 401 || failure.status === 403) break;
+            if (failure.status === 400 && !/model|deprecat|not found|not supported|unsupported/i.test(failure.message)) break;
+          }
+          return { failure };
+        }
+
+        async function callChat(body, signal) {
+          const key = String(GEMINI_API_KEY || "").trim();
+          if (!key) return jsonResponse(503, "API invalid: no API key is connected. The site owner needs to add one.");
+          const out = await geminiAsk(key, body, signal);
+          if (out.failure) {
+            const f = out.failure;
+            const keyProblem = f.status === 401 || f.status === 403 || /api key|api_key/i.test(f.message);
+            return jsonResponse(f.status >= 400 ? f.status : 502, keyProblem ? "API invalid: " + f.message : f.message);
+          }
+          return out.res;
         }
 
         async function executeStream(payload) {
@@ -3353,7 +3418,7 @@
         }
 
         function trackVisit() {
-          if (location.protocol === "file:") return;
+          return; // no server in one-file mode
           const id = visitorId();
           const post = (action) => {
             try {
@@ -3386,30 +3451,35 @@
         let admData = null;
 
         async function admApi(action, opts = {}) {
-          const headers = { "Content-Type": "application/json" };
-          const tok = admToken();
-          if (tok) headers.Authorization = "Bearer " + tok;
-          const res = await fetch("/api/app?action=" + action, {
-            method: opts.method || "GET",
-            headers,
-            body: opts.body ? JSON.stringify(opts.body) : undefined,
-          });
-          let j = null;
-          try {
-            j = await res.json();
-          } catch {
-            // empty
+          const bad = (message, status, code) => {
+            const e = new Error(message);
+            e.code = code;
+            e.status = status;
+            return e;
+          };
+          if (action === "login") {
+            const id = String((opts.body && opts.body.id) || "").trim().toLowerCase();
+            const pw = String((opts.body && opts.body.password) || "");
+            if (id === ADMIN_EMAIL.toLowerCase() && pw === ADMIN_PASSWORD) return { token: "admin-ok" };
+            throw bad("Wrong email or password.", 401);
           }
-          if (res.status === 401 && action !== "login") {
+          if (admToken() !== "admin-ok") {
             admSignOut();
-            throw new Error("Please sign in again.");
+            throw bad("Please sign in again.", 401);
           }
-          if (!res.ok) {
-            const e = new Error((j && j.error && j.error.message) || "Request failed (" + res.status + ").");
-            e.code = j && j.error && j.error.code;
-            throw e;
+          if (action.startsWith("key") && action !== "key") {
+            throw bad("The key lives at the top of index.html (GEMINI_API_KEY). Edit it on GitHub and commit.", 400);
           }
-          return j;
+          if (action === "key") {
+            const key = String(GEMINI_API_KEY || "").trim();
+            if (!key) return { connected: false, masked: "", message: "No API key is set. The AI is switched off for everyone." };
+            const masked = key.length > 10 ? key.slice(0, 4) + "…" + key.slice(-4) : "••••";
+            const out = await geminiAsk(key, { depth: "low", system: "Reply with one short word.", contents: [{ role: "user", parts: [{ text: "Say OK" }] }] });
+            if (out.failure) return { connected: false, masked, message: "Google refused this key: " + out.failure.message };
+            try { await out.res.text(); } catch { /* ok */ }
+            return { connected: true, masked, model: out.model, message: "Connected. The AI is working for everyone." };
+          }
+          throw bad("Visitor stats need a server, which this one-file version doesn't have.", 501, "NO_STATS");
         }
 
         function admSignOut() {
@@ -3593,7 +3663,7 @@
           }
           msg.className = "adm-note" + (k.connected ? "" : " err");
           msg.textContent = (k.masked ? "Saved key: " + k.masked + (k.model ? " · model: " + k.model : "") + ". " : "") + k.message;
-          rm.classList.toggle("hidden", !k.masked);
+          rm.classList.add("hidden");
         }
 
         async function loadAdmin(withKey) {
@@ -3608,9 +3678,7 @@
                 if (e.message === "Please sign in again.") return;
                 const box = document.getElementById("adm-setup");
                 box.classList.remove("hidden");
-                box.innerHTML = e.code === "NO_REDIS"
-                  ? "<b>One step left:</b> connect the free database. In Vercel open your project → <b>Storage</b> → <b>Create</b> → <b>Upstash Redis</b> → connect it to this project, then <b>Redeploy</b>. Stats and the API key box start working right after."
-                  : "Couldn't load stats: " + escapeHtml(e.message);
+                box.innerHTML = e.code === "NO_STATS" ? "Visitor stats are off: a single index.html has no server to count visitors." : "Couldn't load stats: " + escapeHtml(e.message);
               }
             ),
           ];
@@ -3640,10 +3708,10 @@
               <div id="adm-setup" class="adm-banner hidden"></div>
 
               <section class="adm-card">
-                <div class="adm-card-head"><h3>AI connection</h3><span class="adm-sub">The key you save here powers the AI for every visitor.</span></div>
+                <div class="adm-card-head"><h3>AI connection</h3><span class="adm-sub">Set GEMINI_API_KEY at the top of index.html. Empty = AI off for everyone.</span></div>
                 <form id="adm-key-form" class="adm-key-row" novalidate>
-                  <input id="adm-key-input" class="field-input" type="password" autocomplete="off" spellcheck="false" placeholder="Paste your Gemini API key" />
-                  <button id="adm-key-save" type="submit" class="btn-solid" style="height:40px;">Save &amp; connect</button>
+                  <input id="adm-key-input" class="field-input" type="password" autocomplete="off" spellcheck="false" placeholder="Edit GEMINI_API_KEY in index.html" disabled />
+                  <button id="adm-key-save" type="submit" class="btn-solid" style="height:40px;" disabled>Save &amp; connect</button>
                   <span id="adm-pill" class="adm-pill adm-wait"><i></i>Checking…</span>
                 </form>
                 <p id="adm-key-msg" class="adm-note">Checking the connection…</p>
