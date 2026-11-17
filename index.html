@@ -1687,6 +1687,45 @@
           display: none;
         }
       }
+
+      /* ── Sidebar tools ── */
+      .side-tools { padding: 2px 12px 10px; display: flex; flex-direction: column; gap: 1px; }
+      .side-tool { display: flex; align-items: center; gap: 11px; width: 100%; height: 36px; padding: 0 10px; border: none; background: transparent; border-radius: 9px; font-size: 13.5px; font-weight: 500; color: var(--ink-primary); cursor: pointer; text-align: left; transition: background 0.12s; }
+      .side-tool:hover { background: rgba(0, 0, 0, 0.05); }
+      .side-tool.on { background: #fff; box-shadow: 0 0 0 1px var(--border-hairline); }
+      .side-tool svg { flex-shrink: 0; color: var(--ink-secondary); }
+      .side-badge { margin-left: 2px; font-size: 10.5px; font-weight: 600; padding: 2px 7px; border-radius: 6px; background: #e6efff; color: #2f6fed; }
+      .side-badge.soon { background: #f1efe9; color: var(--ink-muted); }
+      .side-sep { height: 1px; background: var(--border-hairline); margin: 4px 12px 8px; }
+      .xv-toast { position: fixed; left: 50%; bottom: 28px; transform: translateX(-50%) translateY(12px); opacity: 0; pointer-events: none; z-index: 90; background: #0a0a0a; color: #faf9f6; font-size: 12.5px; padding: 10px 16px; border-radius: 999px; transition: opacity 0.18s, transform 0.18s; max-width: 90vw; text-align: center; }
+      .xv-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+      /* ── Preview panel ── */
+      .preview-panel { width: clamp(380px, 44vw, 760px); height: 100%; flex-shrink: 0; display: flex; flex-direction: column; background: #fdfcf9; border-left: 1px solid var(--border-hairline); }
+      .preview-panel.hidden, .pv-frame-wrap.hidden, .pv-code.hidden, .pv-seg.hidden, .pv-seg button.hidden { display: none !important; }
+      .pv-head { height: 56px; padding: 0 12px 0 18px; display: flex; align-items: center; justify-content: space-between; gap: 10px; border-bottom: 1px solid var(--border-hairline); background: rgba(253, 252, 249, 0.96); flex-shrink: 0; }
+      .pv-title { display: flex; align-items: center; gap: 8px; font-family: var(--font-display); font-size: 13px; font-weight: 600; min-width: 0; white-space: nowrap; }
+      .pv-dot { width: 7px; height: 7px; border-radius: 50%; background: #22c55e; flex-shrink: 0; }
+      .pv-dot.busy { background: #f59e0b; animation: pvPulse 1s ease-in-out infinite; }
+      @keyframes pvPulse { 50% { opacity: 0.35; } }
+      .pv-lang { font-family: var(--font-mono); font-size: 10.5px; color: var(--ink-muted); background: #f1efe9; padding: 2px 7px; border-radius: 999px; font-weight: 500; }
+      .pv-status { font-size: 11px; color: var(--ink-faint); font-weight: 400; }
+      .pv-actions { display: flex; align-items: center; gap: 6px; }
+      .pv-seg { display: inline-flex; padding: 2px; border-radius: 9px; background: #f1efe9; gap: 2px; }
+      .pv-seg button { border: none; background: transparent; height: 26px; padding: 0 10px; border-radius: 7px; font-size: 12px; font-weight: 500; color: var(--ink-secondary); cursor: pointer; display: inline-flex; align-items: center; }
+      .pv-seg button.on { background: #fff; color: var(--ink-primary); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08); }
+      .pv-body { flex: 1; min-height: 0; padding: 14px; }
+      .pv-frame-wrap { height: 100%; display: flex; justify-content: center; align-items: stretch; border-radius: 14px; border: 1px solid var(--border-hairline); background: #fff; overflow: hidden; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03), 0 10px 28px rgba(0, 0, 0, 0.04); }
+      .pv-frame-wrap.mobile { background: #f4f3ef; padding: 14px 0; }
+      .pv-frame { border: 0; width: 100%; height: 100%; background: #fff; }
+      .pv-frame-wrap.mobile .pv-frame { width: 390px; max-width: calc(100% - 24px); border-radius: 22px; border: 1px solid var(--border-strong); box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08); }
+      .pv-code { height: 100%; overflow: auto; border-radius: 14px; border: 1px solid var(--border-hairline); background: #fff; }
+      .pv-code pre { margin: 0; padding: 16px; font-family: var(--font-mono); font-size: 12.5px; line-height: 1.6; white-space: pre; tab-size: 2; color: var(--ink-primary); }
+      .pv-empty { height: 100%; display: flex; align-items: center; justify-content: center; font-size: 13px; color: var(--ink-faint); }
+      .code-actions { display: inline-flex; align-items: center; gap: 6px; }
+      @media (max-width: 1023px) {
+        .preview-panel { position: fixed; inset: 0; width: 100%; z-index: 60; border-left: none; }
+      }
     </style>
   </head>
   <body>
@@ -1743,6 +1782,17 @@
             />
           </div>
         </div>
+
+        <nav id="side-tools" class="side-tools" aria-label="Tools">
+          <button type="button" class="side-tool" data-tool="plugins"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22v-5"/><path d="M9 8V2"/><path d="M15 8V2"/><path d="M18 8v5a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V8Z"/></svg><span>Plugins</span><span class="side-badge soon">Soon</span></button>
+          <button type="button" class="side-tool" data-tool="scheduled"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2"/><path d="M5 3 2 6"/><path d="m22 6-3-3"/></svg><span>Scheduled</span><span class="side-badge soon">Soon</span></button>
+          <button type="button" class="side-tool" data-tool="inspiration"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><span>Inspiration</span></button>
+          <button type="button" class="side-tool" data-tool="3d"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg><span>3D Make</span><span class="side-badge">New</span></button>
+          <button type="button" class="side-tool" data-tool="slides"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h20"/><path d="M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3"/><path d="m7 21 5-5 5 5"/></svg><span>Slides</span></button>
+          <button type="button" class="side-tool" data-tool="research"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/><path d="M8 11h6"/><path d="M11 8v6"/></svg><span>Deep Research</span></button>
+          <button type="button" class="side-tool" data-tool="build"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 12-8.4 8.4a1.4 1.4 0 0 1-3-3L12 9"/><path d="m18 15 4-4"/><path d="m17.6 5.6 2.8 2.8"/><path d="M14 4l6 6"/></svg><span>Build</span></button>
+        </nav>
+        <div class="side-sep"></div>
 
         <div id="thread-list-container" class="thread-list-scroll"></div>
 
@@ -1825,6 +1875,29 @@
           <div id="bottom-composer-slot" class="composer-container"></div>
         </div>
       </div>
+
+      <!-- Live preview panel -->
+      <aside id="preview-panel" class="preview-panel hidden" aria-label="Preview panel">
+        <div class="pv-head">
+          <div class="pv-title">
+            <span id="pv-dot" class="pv-dot"></span><span>Preview</span><span id="pv-lang" class="pv-lang"></span><span id="pv-status" class="pv-status"></span>
+          </div>
+          <div class="pv-actions">
+            <div class="pv-seg"><button type="button" id="pv-tab-preview">Preview</button><button type="button" id="pv-tab-code">Code</button></div>
+            <div class="pv-seg" id="pv-devices">
+              <button type="button" id="pv-dev-desktop" title="Desktop" aria-label="Desktop"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="3" rx="2"/><path d="M8 21h8M12 17v4"/></svg></button>
+              <button type="button" id="pv-dev-mobile" title="Mobile" aria-label="Mobile"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="12" height="20" x="6" y="2" rx="2"/><path d="M12 18h.01"/></svg></button>
+            </div>
+            <button type="button" id="pv-reload" class="icon-btn" title="Reload preview" aria-label="Reload preview"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg></button>
+            <button type="button" id="pv-copy" class="icon-btn" title="Copy code" aria-label="Copy code"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg></button>
+            <button type="button" id="pv-close" class="icon-btn" title="Close" aria-label="Close preview"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+          </div>
+        </div>
+        <div class="pv-body">
+          <div id="pv-frame-wrap" class="pv-frame-wrap"><iframe id="pv-frame" class="pv-frame" sandbox="allow-scripts allow-forms allow-modals allow-popups" title="Live preview"></iframe></div>
+          <div id="pv-code" class="pv-code hidden"><pre id="pv-code-text"></pre></div>
+        </div>
+      </aside>
     </div>
 
     <!-- Reusable Composer Template (moved dynamically between center & bottom dock) -->
@@ -2010,7 +2083,7 @@
         // in your Supabase database. Removing it there disconnects the AI for everyone.
         // ── ONE-TIME SETUP: paste these two values from your free Supabase project (see instructions) ──
         // They are NOT secret. Your Gemini key and admin password never go in this file.
-        const SUPABASE_URL = "https://mvdhltrgvojqbvmdtite.supabase.co/rest/v1/"; // e.g. https://abcdxyz.supabase.co
+        const SUPABASE_URL = "https://mvdhltrgvojqbvmdtite.supabase.co"; // e.g. https://abcdxyz.supabase.co
         const SUPABASE_ANON_KEY = "sb_publishable_bRu8KK7EQKF4suRy2WhFVQ_WBE8YqNL";
         const CHAT_ENDPOINT = "gemini-direct";
         const GEMINI_MODELS = [
@@ -2032,7 +2105,7 @@
         const APPLE_SDK = "https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js";
 
         const BASE_PROMPT =
-          "You are XEROVIN, a fast, precise AI engineering assistant. Lead with the answer and keep prose tight. Formatting rules: use only # / ## / ### headings, '- ' bullets, numbered lists like '1. ', **bold**, `inline code`, and fenced code blocks that carry a language tag. Never use tables, italics, HTML or markdown links.";
+          "You are XEROVIN, a fast, precise AI engineering assistant. Lead with the answer and keep prose tight. Formatting rules: use only # / ## / ### headings, '- ' bullets, numbered lists like '1. ', **bold**, `inline code`, and fenced code blocks that carry a language tag. Never use tables, italics, HTML or markdown links in prose. Exception: when asked to build anything visual or interactive (a page, UI, component, game, animation, chart or SVG), reply with ONE complete self-contained ```html block (inline CSS and JS) so it can be previewed live, then a short note.";
         const MODE_PROMPTS = {
           chat: "",
           architect:
@@ -2425,7 +2498,7 @@
           if (state.user) {
             els.composerGateBar.classList.add("hidden");
             els.promptTextarea.placeholder =
-              "Ask XEROVIN anything, paste code, or attach an image...";
+              (state.tool && TOOL_HINTS[state.tool]) || "Ask XEROVIN anything, paste code, or attach an image...";
             const firstName = state.user.name.split(" ")[0];
             els.welcomeHeading.textContent = `Ready when you are, ${firstName}.`;
             els.welcomeSubtitle.textContent =
@@ -2461,14 +2534,7 @@
           }
         }
 
-        function renderMessages() {
-          if (state.messages.length === 0) {
-            els.messagesWrap.innerHTML = "";
-            return;
-          }
-
-          const html = state.messages
-            .map((msg, idx) => {
+        function messageHtml(msg, idx) {
               const isLast = idx === state.messages.length - 1;
               if (msg.role === "user") {
                 const imgHtml = msg.imageDataUrl
@@ -2503,9 +2569,9 @@
                         <div class="code-card">
                           <div class="code-card-header">
                             <span class="code-lang">${escapeHtml(seg.lang)}</span>
-                            <button type="button" class="copy-inline-btn" data-copy-key="${escapeHtml(codeKey)}" data-copy-payload="${escapeHtml(seg.content)}">
+                            <span class="code-actions"><button type="button" class="copy-inline-btn" data-preview-open="1" data-preview-lang="${escapeHtml(seg.lang)}" data-preview-payload="${escapeHtml(seg.content)}"><span>${isPreviewable(seg.lang) ? "Preview" : "View"}</span></button><button type="button" class="copy-inline-btn" data-copy-key="${escapeHtml(codeKey)}" data-copy-payload="${escapeHtml(seg.content)}">
                               <span>${copied ? "Copied" : "Copy"}</span>
-                            </button>
+                            </button></span>
                           </div>
                           <pre class="code-pre"><code>${escapeHtml(seg.content)}</code></pre>
                         </div>`;
@@ -2547,16 +2613,20 @@
                   </div>
                   <div class="assistant-body">${bodyHtml}</div>
                 </div>`;
-            })
-            .join("");
+        }
+
+        function renderMessages() {
+          if (state.messages.length === 0) {
+            els.messagesWrap.innerHTML = "";
+            return;
+          }
+
+          const html = state.messages.map((m, i) => messageHtml(m, i)).join("");
 
           els.messagesWrap.innerHTML = html;
-          els.messagesWrap.querySelectorAll("[data-copy-key]").forEach((btn) => {
-            btn.addEventListener("click", () => {
-              copyText(btn.getAttribute("data-copy-key"), btn.getAttribute("data-copy-payload"));
-            });
-          });
+          bindMessageButtons(els.messagesWrap);
           els.viewportScroll.scrollTop = els.viewportScroll.scrollHeight;
+          syncPreview();
         }
 
         function renderStarterGrid() {
@@ -3001,7 +3071,7 @@
           renderQueued = true;
           requestAnimationFrame(() => {
             renderQueued = false;
-            renderMessages();
+            renderStreamTail();
           });
         }
 
@@ -3057,7 +3127,7 @@
         async function geminiAsk(key, body, signal) {
           const depth = ["low", "medium", "high", "xhigh"].includes(body.depth) ? body.depth : "medium";
           let failure = { status: 502, message: "The AI service is unavailable right now." };
-          for (const m of GEMINI_MODELS) {
+          for (const m of orderedModels()) {
             let withThinking = true;
             for (let attempt = 0; attempt < 2; attempt++) {
               let res;
@@ -3076,7 +3146,7 @@
                 failure = { status: 502, message: "Could not reach Google. Try again in a moment." };
                 break;
               }
-              if (res.ok) return { res, model: m.id };
+              if (res.ok) { preferredModel = m.id; return { res, model: m.id }; }
               let message = "Request failed (" + res.status + ").";
               try {
                 const j = await res.json();
@@ -3098,7 +3168,7 @@
         }
 
         async function callChat(body, signal) {
-          const key = await fetchSharedKey();
+          const key = await fetchSharedKey(true);
           if (!key) return jsonResponse(503, "API invalid: no API key is connected. The site owner needs to add one.");
           const out = await geminiAsk(key, body, signal);
           if (out.failure) {
@@ -3108,6 +3178,230 @@
           }
           return out.res;
         }
+
+        // ── TOOLS, LIVE PREVIEW PANEL & SPEED ───────────────────────────
+        let preferredModel = "";
+        function orderedModels() {
+          return GEMINI_MODELS.slice().sort((a, b) => (b.id === preferredModel ? 1 : 0) - (a.id === preferredModel ? 1 : 0));
+        }
+
+        const TOOL_PROMPTS = {
+          inspiration:
+            "Tool: Inspiration. Give 6 distinct, original ideas for the user's topic, each with a one-line hook and a concrete first step. When the topic is visual (UI, branding, landing pages), also deliver ONE standalone HTML moodboard or mockup in a single ```html block.",
+          "3d":
+            "Tool: 3D Make. Output ONE complete self-contained HTML file in a single ```html block that renders an interactive 3D scene with Three.js loaded from https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js (no OrbitControls or addons; implement drag-to-rotate and wheel-to-zoom with pointer events). Full-window canvas, soft milk-white background (#faf9f6), gentle lighting. One sentence of explanation after the code.",
+          slides:
+            "Tool: Slides. Output ONE complete self-contained HTML slide deck in a single ```html block: 16:9 slides shown one at a time, arrow-key and click navigation, slide counter, minimal milk-white design (background #faf9f6, ink #0a0a0a), no external images. Use the slide count the user asks for (default 6).",
+          research:
+            "Tool: Deep Research. Produce a thorough, well-structured analysis with these headings: ## Summary, ## Key findings (with specifics), ## Tradeoffs and open questions, ## Recommendation. Say clearly where something is uncertain or may be out of date, since you cannot browse the web here.",
+          build:
+            "Tool: Build. Output ONE complete, working, self-contained HTML app in a single ```html block (inline CSS and JS, no build step, libraries only from cdnjs.cloudflare.com). Polished minimal milk-white UI, responsive, real working logic with no placeholders. One short note after the code on how to use it.",
+        };
+        const TOOL_HINTS = {
+          inspiration: "What do you want inspiration for?",
+          "3d": "Describe the 3D scene to make…",
+          slides: "What is the presentation about?",
+          research: "What should I research in depth?",
+          build: "Describe the app or page to build…",
+        };
+        state.tool = null;
+
+        let toastTimer = 0;
+        function showToast(msg) {
+          let t = document.getElementById("xv-toast");
+          if (!t) {
+            t = document.createElement("div");
+            t.id = "xv-toast";
+            t.className = "xv-toast";
+            document.body.appendChild(t);
+          }
+          t.textContent = msg;
+          t.classList.add("show");
+          clearTimeout(toastTimer);
+          toastTimer = setTimeout(() => t.classList.remove("show"), 2600);
+        }
+
+        function paintTools() {
+          document.querySelectorAll("[data-tool]").forEach((b) => b.classList.toggle("on", b.getAttribute("data-tool") === state.tool));
+          renderComposer();
+        }
+
+        document.querySelectorAll("[data-tool]").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const k = btn.getAttribute("data-tool");
+            if (k === "plugins") return showToast("Plugins are coming soon. They need a server-side connection.");
+            if (k === "scheduled") return showToast("Scheduled tasks are coming soon. They need a server to run in the background.");
+            state.tool = state.tool === k ? null : k;
+            paintTools();
+            if (state.mobileSidebarOpen) {
+              state.mobileSidebarOpen = false;
+              renderSidebar();
+            }
+            if (state.tool && els.promptTextarea) els.promptTextarea.focus();
+          });
+        });
+
+        // Live preview panel
+        const PREVIEW_LANGS = ["html", "htm", "svg"];
+        const isPreviewable = (lang) => PREVIEW_LANGS.includes(String(lang || "").toLowerCase());
+        const pv = { open: false, lang: "", code: "", tab: "code", device: "desktop", liveId: null, dismissed: new Set(), previewed: new Set(), docKey: "", generating: false };
+        const $pv = (id) => document.getElementById(id);
+
+        const STORAGE_SHIM =
+          "<script>try{localStorage.getItem('x')}catch(e){var mk=function(){var m={};return{getItem:function(k){return k in m?m[k]:null},setItem:function(k,v){m[k]=String(v)},removeItem:function(k){delete m[k]},clear:function(){for(var k in m)delete m[k]},key:function(i){return Object.keys(m)[i]||null},get length(){return Object.keys(m).length}}};try{Object.defineProperty(window,'localStorage',{value:mk()});Object.defineProperty(window,'sessionStorage',{value:mk()})}catch(e2){}}<\/script>";
+
+        function previewDoc(lang, code) {
+          if (String(lang).toLowerCase() === "svg") {
+            return "<!doctype html><html><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><style>html,body{margin:0;height:100%;background:#fff;display:grid;place-items:center}svg{max-width:100%;max-height:100%}</style></head><body>" + code + "</body></html>";
+          }
+          if (/<head[^>]*>/i.test(code)) return code.replace(/<head[^>]*>/i, (m) => m + STORAGE_SHIM);
+          if (/<html[^>]*>/i.test(code)) return code.replace(/<html[^>]*>/i, (m) => m + "<head>" + STORAGE_SHIM + "</head>");
+          return "<!doctype html><html><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">" + STORAGE_SHIM + "</head><body>" + code + "</body></html>";
+        }
+
+        function loadFrame(force) {
+          const key = pv.lang + "\n" + pv.code;
+          if (!force && key === pv.docKey) return;
+          pv.docKey = key;
+          $pv("pv-frame").srcdoc = previewDoc(pv.lang, pv.code);
+        }
+
+        function renderPanel() {
+          const panel = $pv("preview-panel");
+          if (!panel) return;
+          panel.classList.toggle("hidden", !pv.open);
+          if (!pv.open) return;
+          const can = isPreviewable(pv.lang);
+          const tab = can ? pv.tab : "code";
+          $pv("pv-lang").textContent = (pv.lang || "code").toUpperCase();
+          $pv("pv-status").textContent = pv.generating ? "Generating…" : can ? "Live" : "";
+          $pv("pv-dot").classList.toggle("busy", pv.generating);
+          $pv("pv-tab-preview").classList.toggle("hidden", !can);
+          $pv("pv-tab-preview").classList.toggle("on", tab === "preview");
+          $pv("pv-tab-code").classList.toggle("on", tab === "code");
+          $pv("pv-devices").classList.toggle("hidden", tab !== "preview");
+          $pv("pv-dev-desktop").classList.toggle("on", pv.device === "desktop");
+          $pv("pv-dev-mobile").classList.toggle("on", pv.device === "mobile");
+          $pv("pv-frame-wrap").classList.toggle("hidden", tab !== "preview");
+          $pv("pv-frame-wrap").classList.toggle("mobile", pv.device === "mobile");
+          $pv("pv-code").classList.toggle("hidden", tab !== "code");
+          if (tab === "code") {
+            const pre = $pv("pv-code-text");
+            if (pre.textContent !== pv.code) {
+              pre.textContent = pv.code;
+              if (pv.generating) $pv("pv-code").scrollTop = $pv("pv-code").scrollHeight;
+            }
+          } else {
+            loadFrame(false);
+          }
+        }
+
+        function openPreviewManual(lang, code) {
+          pv.open = true;
+          pv.lang = lang;
+          pv.code = code;
+          pv.generating = false;
+          pv.tab = isPreviewable(lang) ? "preview" : "code";
+          pv.docKey = "";
+          renderPanel();
+        }
+
+        function closePreview() {
+          pv.open = false;
+          if (pv.liveId) pv.dismissed.add(pv.liveId);
+          renderPanel();
+        }
+
+        function bindMessageButtons(root) {
+          root.querySelectorAll("[data-copy-key]").forEach((btn) => {
+            btn.addEventListener("click", () => {
+              copyText(btn.getAttribute("data-copy-key"), btn.getAttribute("data-copy-payload"));
+            });
+          });
+          root.querySelectorAll("[data-preview-open]").forEach((btn) => {
+            btn.addEventListener("click", () => {
+              openPreviewManual(btn.getAttribute("data-preview-lang") || "code", btn.getAttribute("data-preview-payload") || "");
+            });
+          });
+        }
+
+        function syncPreview() {
+          const last = state.messages[state.messages.length - 1];
+          if (!last || last.role !== "assistant") return;
+          if (state.isStreaming) pv.liveId = last.id;
+          if (pv.liveId !== last.id) return;
+          const finished = !state.isStreaming;
+          const segs = parseMarkdownSegments(last.content || "").filter((x) => x.type === "code");
+          if (!segs.length) {
+            if (finished) pv.liveId = null;
+            return;
+          }
+          if (pv.dismissed.has(last.id)) {
+            if (finished) pv.liveId = null;
+            return;
+          }
+          const seg = segs[segs.length - 1];
+          const closed = ((last.content || "").match(/```/g) || []).length % 2 === 0;
+          const doneBlock = closed || finished;
+          if (!pv.open) {
+            pv.open = true;
+            pv.tab = "code";
+          }
+          if (pv.lang !== seg.lang) pv.docKey = "";
+          pv.lang = seg.lang;
+          pv.code = seg.content;
+          pv.generating = !doneBlock;
+          const stamp = last.id + ":" + segs.length;
+          if (doneBlock && isPreviewable(seg.lang) && !pv.previewed.has(stamp)) {
+            pv.previewed.add(stamp);
+            pv.tab = "preview";
+            pv.docKey = "";
+          } else if (!doneBlock) {
+            pv.tab = "code";
+          }
+          if (finished) pv.liveId = null;
+          renderPanel();
+        }
+
+        function renderStreamTail() {
+          const n = state.messages.length;
+          const kids = els.messagesWrap.children;
+          if (!n || kids.length !== n) {
+            renderMessages();
+            return;
+          }
+          const sc = els.viewportScroll;
+          const near = sc.scrollHeight - sc.scrollTop - sc.clientHeight < 160;
+          const tmp = document.createElement("div");
+          tmp.innerHTML = messageHtml(state.messages[n - 1], n - 1);
+          const node = tmp.firstElementChild;
+          if (!node) {
+            renderMessages();
+            return;
+          }
+          kids[n - 1].replaceWith(node);
+          bindMessageButtons(node);
+          if (near) sc.scrollTop = sc.scrollHeight;
+          syncPreview();
+        }
+
+        $pv("pv-tab-preview").addEventListener("click", () => { pv.tab = "preview"; renderPanel(); });
+        $pv("pv-tab-code").addEventListener("click", () => { pv.tab = "code"; renderPanel(); });
+        $pv("pv-dev-desktop").addEventListener("click", () => { pv.device = "desktop"; renderPanel(); });
+        $pv("pv-dev-mobile").addEventListener("click", () => { pv.device = "mobile"; renderPanel(); });
+        $pv("pv-reload").addEventListener("click", () => { if (isPreviewable(pv.lang)) { pv.tab = "preview"; renderPanel(); loadFrame(true); } });
+        $pv("pv-copy").addEventListener("click", async () => {
+          try { await navigator.clipboard.writeText(pv.code); showToast("Code copied"); } catch { showToast("Couldn't copy"); }
+        });
+        $pv("pv-close").addEventListener("click", closePreview);
+        document.addEventListener("keydown", (e) => { if (e.key === "Escape" && pv.open) closePreview(); });
+
+        // Warm up connections so the first answer starts sooner
+        window.addEventListener("load", () => {
+          const pre = (href) => { const l = document.createElement("link"); l.rel = "preconnect"; l.href = href; l.crossOrigin = ""; document.head.appendChild(l); };
+          pre("https://generativelanguage.googleapis.com");
+          try { if (fbReady()) { pre(sbBase()); fetchSharedKey(true); } } catch { /* ignore */ }
+        });
 
         async function executeStream(payload) {
           setErrorBanner(null);
@@ -3150,7 +3444,7 @@
           const convo = state.messages;
           renderAll();
 
-          const system = [BASE_PROMPT, MODE_PROMPTS[payload.mode] || ""].filter(Boolean).join("\n\n");
+          const system = [BASE_PROMPT, MODE_PROMPTS[payload.mode] || "", TOOL_PROMPTS[state.tool] || ""].filter(Boolean).join("\n\n");
           const body = {
             depth: payload.depth,
             system,
@@ -3463,14 +3757,18 @@
         };
         const KEY_ROW = "/rest/v1/config?key=eq.gemini";
 
-        async function fetchSharedKey() {
+        let keyCache = { v: "", at: 0 };
+        async function fetchSharedKey(useCache) {
           if (!fbReady()) return "";
+          if (useCache && keyCache.v && Date.now() - keyCache.at < 20000) return keyCache.v;
           try {
             const r = await fetch(sbBase() + KEY_ROW + "&select=value", { headers: sbHeaders(), cache: "no-store" });
             if (!r.ok) return "";
             const rows = await r.json();
             const v = rows && rows[0] && rows[0].value;
-            return typeof v === "string" ? v.trim() : "";
+            const out = typeof v === "string" ? v.trim() : "";
+            keyCache = { v: out, at: Date.now() };
+            return out;
           } catch {
             return "";
           }
@@ -3543,7 +3841,20 @@
             const a = await authCall("/auth/v1/signup", code);
             if (!a.r.ok) {
               if (apiKeyProblem(a)) throw bad("Supabase rejected SUPABASE_ANON_KEY. Re-copy the publishable/anon key (not the secret key) into index.html.", 401);
-              if (/already|exist|Admin already created|database error/i.test(a.detail + a.code)) throw bad("Admin was already created, so sign-up is locked. Reload and enter your code.", 403);
+              if (/already|exist|Admin already created|database error/i.test(a.detail + a.code)) {
+                // A user may exist from an earlier half-finished setup: if this code opens it, finish setup.
+                const l = await authCall("/auth/v1/token?grant_type=password", code);
+                if (l.r.ok && l.j.access_token) {
+                  const w2 = await fetch(sbBase() + "/rest/v1/config?on_conflict=key", {
+                    method: "POST",
+                    headers: { ...sbHeaders(l.j.access_token), Prefer: "resolution=merge-duplicates,return=minimal" },
+                    body: JSON.stringify({ key: "admin_ready", value: "1" }),
+                  });
+                  if (!w2.ok) throw bad("Code accepted, but the config table isn't set up (" + w2.status + "). Run the SQL from the instructions.", 500);
+                  return { token: l.j.access_token };
+                }
+                throw bad("Sign-up is blocked because a different admin user already exists in Supabase. Open Authentication → Users, delete every user, then try again. (If you remember the old code, enter that code here instead.)", 403);
+              }
               if (/disabled|not allowed/i.test(a.detail + a.code)) throw bad("Sign-ups are switched off in Supabase. Turn on Authentication → Sign In / Providers → \"Allow new users to sign up\" for the first setup.", 500);
               throw bad("Setup failed (" + a.r.status + "): " + (a.detail || a.code || "unknown error"), 500);
             }
