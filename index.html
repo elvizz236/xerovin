@@ -1726,6 +1726,93 @@
       @media (max-width: 1023px) {
         .preview-panel { position: fixed; inset: 0; width: 100%; z-index: 60; border-left: none; }
       }
+
+      /* ── Sheets (Plugins / Scheduled) ── */
+      .xv-sheet-back { position: fixed; inset: 0; z-index: 80; background: rgba(10, 10, 10, 0.28); display: flex; align-items: center; justify-content: center; padding: 16px; }
+      .xv-sheet { width: 100%; max-width: 520px; max-height: 86vh; overflow: auto; background: #fdfcf9; border: 1px solid var(--border-hairline); border-radius: 18px; box-shadow: 0 24px 60px rgba(0, 0, 0, 0.18); padding: 22px; }
+      .xv-sheet h3 { margin: 0 0 4px; font-size: 18px; font-family: var(--font-display); }
+      .xv-sheet .xv-sub { margin: 0 0 16px; font-size: 13px; color: var(--ink-muted); line-height: 1.5; }
+      .xv-sheet-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+      .xv-row { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 12px 0; border-top: 1px solid var(--border-hairline); }
+      .xv-row:first-of-type { border-top: none; }
+      .xv-row b { display: block; font-size: 13.5px; font-weight: 600; }
+      .xv-row span.d { display: block; font-size: 12px; color: var(--ink-muted); margin-top: 2px; line-height: 1.45; }
+      .xv-switch { position: relative; width: 38px; height: 22px; flex-shrink: 0; }
+      .xv-switch input { position: absolute; inset: 0; opacity: 0; cursor: pointer; margin: 0; }
+      .xv-switch i { position: absolute; inset: 0; border-radius: 999px; background: #d9d6cd; transition: background 0.15s; pointer-events: none; }
+      .xv-switch i::after { content: ""; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: #fff; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25); transition: transform 0.15s; }
+      .xv-switch input:checked + i { background: #0a0a0a; }
+      .xv-switch input:checked + i::after { transform: translateX(16px); }
+      .xv-field { width: 100%; border: 1px solid var(--border-strong); background: #fff; border-radius: 10px; padding: 10px 12px; font: inherit; font-size: 13.5px; color: var(--ink-primary); }
+      .xv-field:focus { outline: none; border-color: #0a0a0a; }
+      .xv-form { display: grid; gap: 10px; margin-bottom: 14px; }
+      .xv-form .two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+      .xv-btn { height: 38px; padding: 0 16px; border-radius: 10px; border: none; background: #0a0a0a; color: #faf9f6; font-size: 13px; font-weight: 600; cursor: pointer; }
+      .xv-btn.ghost { background: #f1efe9; color: var(--ink-primary); }
+      .xv-note { font-size: 11.5px; color: var(--ink-faint); line-height: 1.5; margin: 12px 0 0; }
+
+      /* ── Tool pages ── */
+      .tool-view { flex: 1; min-height: 0; overflow: auto; background: var(--bg-canvas); }
+      .tool-view.hidden { display: none !important; }
+      .tool-mode #viewport-scroll, .tool-mode #bottom-composer-dock, .tool-mode .preview-panel { display: none !important; }
+      .tool-root { max-width: 1180px; margin: 0 auto; padding: 26px 28px 70px; }
+      .tv-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 20px; }
+      .tv-head h2 { margin: 0 0 4px; font-family: var(--font-display); font-size: 26px; letter-spacing: -0.01em; }
+      .tv-head p { margin: 0; font-size: 14px; color: var(--ink-muted); max-width: 640px; line-height: 1.5; }
+      .tv-back { height: 34px; padding: 0 12px; border-radius: 9px; border: 1px solid var(--border-strong); background: #fff; font-size: 12.5px; font-weight: 500; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0; }
+      .tv-grid { display: grid; grid-template-columns: minmax(300px, 380px) minmax(0, 1fr); gap: 20px; align-items: start; }
+      .tv-card { background: #fff; border: 1px solid var(--border-hairline); border-radius: 16px; padding: 18px; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03); }
+      .tv-label { display: block; font-size: 12px; font-weight: 600; color: var(--ink-secondary); margin: 14px 0 6px; }
+      .tv-label:first-child { margin-top: 0; }
+      .tv-field { width: 100%; border: 1px solid var(--border-strong); background: #fdfcf9; border-radius: 10px; padding: 10px 12px; font: inherit; font-size: 13.5px; color: var(--ink-primary); }
+      .tv-field:focus { outline: none; border-color: #0a0a0a; background: #fff; }
+      textarea.tv-field { resize: vertical; min-height: 96px; line-height: 1.5; }
+      .tv-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+      .tv-chip { border: 1px solid var(--border-hairline); background: #fdfcf9; border-radius: 999px; padding: 5px 10px; font-size: 11.5px; color: var(--ink-secondary); cursor: pointer; text-align: left; }
+      .tv-chip:hover { background: #f4f3ef; }
+      .tv-go { width: 100%; height: 42px; margin-top: 16px; border: none; border-radius: 11px; background: #0a0a0a; color: #faf9f6; font-size: 13.5px; font-weight: 600; cursor: pointer; }
+      .tv-go:disabled { opacity: 0.6; cursor: default; }
+      .tv-go.stop { background: #fff; color: #0a0a0a; border: 1px solid var(--border-strong); }
+      .tv-recent { margin-top: 18px; }
+      .tv-recent b { font-size: 12px; color: var(--ink-secondary); }
+      .tv-recent button { display: block; width: 100%; text-align: left; border: none; background: transparent; padding: 8px 8px; border-radius: 8px; font-size: 12.5px; color: var(--ink-primary); cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .tv-recent button:hover { background: #f4f3ef; }
+      .tv-out { min-height: 420px; }
+      .tv-empty { display: flex; align-items: center; justify-content: center; min-height: 380px; text-align: center; color: var(--ink-faint); font-size: 13.5px; padding: 20px; }
+      .tv-err { margin-bottom: 12px; padding: 10px 12px; border-radius: 10px; background: #fdecec; color: #a12626; font-size: 13px; }
+      .tv-prose .assistant-prose { padding: 0; }
+      .tv-pcard { margin-top: 14px; border: 1px solid var(--border-hairline); border-radius: 14px; overflow: hidden; background: #fdfcf9; }
+      .tv-pbar { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 10px 8px 14px; border-bottom: 1px solid var(--border-hairline); flex-wrap: wrap; }
+      .tv-pbar .l { display: flex; align-items: center; gap: 8px; font-size: 12.5px; font-weight: 600; }
+      .tv-pbar .r { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+      .tv-pbody { height: 560px; padding: 12px; }
+      .tv-pbody .pv-frame-wrap, .tv-pbody .pv-code { height: 100%; }
+      .tv-mini { height: 28px; padding: 0 10px; border-radius: 8px; border: 1px solid var(--border-hairline); background: #fff; font-size: 12px; font-weight: 500; cursor: pointer; }
+      .tv-refine { display: flex; gap: 8px; margin-top: 14px; }
+      .tv-refine .tv-field { flex: 1; }
+      .tv-refine button { height: 40px; padding: 0 16px; border-radius: 10px; border: none; background: #0a0a0a; color: #faf9f6; font-size: 13px; font-weight: 600; cursor: pointer; }
+      .side-tool.on { background: #fff; box-shadow: 0 0 0 1px var(--border-hairline); font-weight: 600; }
+      /* connectors */
+      .cx-card { border: 1px solid var(--border-hairline); background: #fff; border-radius: 14px; padding: 14px 16px; margin-bottom: 10px; }
+      .cx-top { display: flex; align-items: center; gap: 12px; }
+      .cx-logo { width: 38px; height: 38px; border-radius: 11px; background: #fff; border: 1px solid var(--border-hairline); display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; }
+      .cx-logo img { width: 24px; height: 24px; object-fit: contain; display: block; }
+      .cx-letter { display: none; width: 100%; height: 100%; align-items: center; justify-content: center; background: #0a0a0a; color: #faf9f6; font-weight: 700; font-size: 14px; }
+      .cx-top .t { flex: 1; min-width: 0; }
+      .cx-top .t b { display: block; font-size: 14px; }
+      .cx-top .t span { display: block; font-size: 12px; color: var(--ink-muted); margin-top: 1px; }
+      .cx-state { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 999px; background: #f1efe9; color: var(--ink-muted); white-space: nowrap; }
+      .cx-state.on { background: #e3f6e8; color: #17803d; }
+      .cx-state.engine { background: #0a0a0a; color: #faf9f6; }
+      .cx-body { margin-top: 12px; display: grid; gap: 8px; }
+      .cx-row { display: flex; gap: 8px; flex-wrap: wrap; }
+      .cx-row .tv-field { flex: 1; min-width: 160px; }
+      .cx-warn { font-size: 12px; color: var(--ink-muted); line-height: 1.5; margin: 0; }
+      @media (max-width: 900px) {
+        .tv-grid { grid-template-columns: 1fr; }
+        .tool-root { padding: 18px 16px 60px; }
+        .tv-pbody { height: 440px; }
+      }
     </style>
   </head>
   <body>
@@ -1784,8 +1871,8 @@
         </div>
 
         <nav id="side-tools" class="side-tools" aria-label="Tools">
-          <button type="button" class="side-tool" data-tool="plugins"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22v-5"/><path d="M9 8V2"/><path d="M15 8V2"/><path d="M18 8v5a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V8Z"/></svg><span>Plugins</span><span class="side-badge soon">Soon</span></button>
-          <button type="button" class="side-tool" data-tool="scheduled"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2"/><path d="M5 3 2 6"/><path d="m22 6-3-3"/></svg><span>Scheduled</span><span class="side-badge soon">Soon</span></button>
+          <button type="button" class="side-tool" data-tool="plugins"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22v-5"/><path d="M9 8V2"/><path d="M15 8V2"/><path d="M18 8v5a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V8Z"/></svg><span>Plugins</span><span id="plug-count" class="side-badge soon hidden"></span></button>
+          <button type="button" class="side-tool" data-tool="scheduled"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2"/><path d="M5 3 2 6"/><path d="m22 6-3-3"/></svg><span>Scheduled</span><span id="sched-count" class="side-badge soon hidden"></span></button>
           <button type="button" class="side-tool" data-tool="inspiration"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><span>Inspiration</span></button>
           <button type="button" class="side-tool" data-tool="3d"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg><span>3D Make</span><span class="side-badge">New</span></button>
           <button type="button" class="side-tool" data-tool="slides"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h20"/><path d="M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3"/><path d="m7 21 5-5 5 5"/></svg><span>Slides</span></button>
@@ -1830,6 +1917,8 @@
 
           <div id="topbar-right" class="topbar-right"></div>
         </header>
+
+        <section id="tool-view" class="tool-view hidden"><div id="tool-root" class="tool-root"></div></section>
 
         <main id="viewport-scroll" class="viewport-scroll">
           <div id="error-banner-wrap" class="error-banner-wrap hidden">
@@ -3117,10 +3206,11 @@
         const jsonResponse = (status, message) =>
           new Response(JSON.stringify({ error: { message } }), { status, headers: { "Content-Type": "application/json" } });
 
-        function geminiPayload(body, level) {
+        function geminiPayload(body, level, withSearch) {
           const payload = { contents: body.contents, generationConfig: { maxOutputTokens: 16384 } };
           if (body.system) payload.systemInstruction = { parts: [{ text: body.system }] };
           if (level) payload.generationConfig.thinkingConfig = { thinkingLevel: level };
+          if (withSearch) payload.tools = [{ google_search: {} }];
           return payload;
         }
 
@@ -3129,7 +3219,8 @@
           let failure = { status: 502, message: "The AI service is unavailable right now." };
           for (const m of orderedModels()) {
             let withThinking = true;
-            for (let attempt = 0; attempt < 2; attempt++) {
+            let withSearch = !!body.webSearch;
+            for (let attempt = 0; attempt < 3; attempt++) {
               let res;
               try {
                 res = await fetch(
@@ -3138,7 +3229,7 @@
                     method: "POST",
                     headers: { "Content-Type": "application/json", "x-goog-api-key": key },
                     signal,
-                    body: JSON.stringify(geminiPayload(body, withThinking ? m.levels[depth] : null)),
+                    body: JSON.stringify(geminiPayload(body, withThinking ? m.levels[depth] : null, withSearch)),
                   }
                 );
               } catch (e) {
@@ -3155,6 +3246,10 @@
                 // not JSON
               }
               failure = { status: res.status, message };
+              if (res.status === 400 && withSearch && /search|tool|ground/i.test(message)) {
+                withSearch = false;
+                continue;
+              }
               if (res.status === 400 && withThinking && /think/i.test(message)) {
                 withThinking = false;
                 continue;
@@ -3167,7 +3262,130 @@
           return { failure };
         }
 
+        // ── CONNECTORS (extra AI engines) ──────────────────────────────
+        const CONNECTORS = [
+          { id: "gemini", domain: "gemini.google.com", name: "Gemini", by: "Google · built in, uses the site's key", builtin: true },
+          { id: "claude", domain: "claude.ai", name: "Claude", by: "Anthropic · use Claude as the AI engine", kind: "anthropic", model: "claude-sonnet-5-5", hint: "sk-ant-…" },
+          { id: "openai", domain: "chatgpt.com", name: "ChatGPT", by: "OpenAI · use ChatGPT models as the AI engine", kind: "openai", base: "https://api.openai.com/v1", model: "gpt-4o-mini", hint: "sk-…" },
+          { id: "groq", domain: "groq.com", name: "Groq", by: "Very fast open models", kind: "openai", base: "https://api.groq.com/openai/v1", model: "llama-3.3-70b-versatile", hint: "gsk_…" },
+          { id: "openrouter", domain: "openrouter.ai", name: "OpenRouter", by: "Hundreds of models with one key", kind: "openai", base: "https://openrouter.ai/api/v1", model: "openai/gpt-4o-mini", hint: "sk-or-…" },
+          { id: "github", domain: "github.com", name: "GitHub", by: "Save generated pages as private Gists", kind: "github", hint: "Token with the gist permission" },
+          { id: "notion", domain: "notion.so", name: "Notion", by: "Send results to Notion", unavailable: "Notion blocks requests from web pages, so it needs a small server. It can't work from a single index.html." },
+        ];
+        const CONN_KEY = "xerovin_conn";
+        const ENGINE_KEY = "xerovin_engine";
+        const loadConn = () => { try { return JSON.parse(localStorage.getItem(CONN_KEY) || "{}"); } catch { return {}; } };
+        const saveConn = (o) => { try { localStorage.setItem(CONN_KEY, JSON.stringify(o)); } catch { /* ignore */ } };
+        const getEngine = () => {
+          let e = "gemini";
+          try { e = localStorage.getItem(ENGINE_KEY) || "gemini"; } catch { /* ignore */ }
+          const c = loadConn()[e];
+          return e !== "gemini" && c && c.key ? e : "gemini";
+        };
+        const setEngine = (e) => { try { localStorage.setItem(ENGINE_KEY, e); } catch { /* ignore */ } paintEngine(); };
+        function paintEngine() {
+          const spans = document.querySelectorAll(".topbar-center span");
+          const last = spans[spans.length - 1];
+          if (!last) return;
+          const e = getEngine();
+          const c = CONNECTORS.find((x) => x.id === e);
+          last.textContent = e === "gemini" ? "Streaming Inference" : "Engine: " + (c ? c.name : e);
+        }
+
+        function toProviderMessages(contents, kind) {
+          return contents.map((m) => {
+            const role = m.role === "model" ? "assistant" : "user";
+            const parts = [];
+            (m.parts || []).forEach((p) => {
+              if (p.text) parts.push({ type: "text", text: p.text });
+              const img = p.inlineData || p.inline_data;
+              if (img) {
+                const mime = img.mimeType || img.mime_type || "image/png";
+                parts.push(kind === "anthropic"
+                  ? { type: "image", source: { type: "base64", media_type: mime, data: img.data } }
+                  : { type: "image_url", image_url: { url: "data:" + mime + ";base64," + img.data } });
+              }
+            });
+            return { role, content: parts.length === 1 && parts[0].type === "text" ? parts[0].text : parts };
+          });
+        }
+
+        function providerStream(res, kind) {
+          const dec = new TextDecoder();
+          const enc = new TextEncoder();
+          let buf = "";
+          const emit = (ctl, t) => ctl.enqueue(enc.encode("data: " + JSON.stringify({ candidates: [{ content: { parts: [{ text: t }] } }] }) + "\n\n"));
+          const handle = (ctl, block) => {
+            for (const line of block.split("\n")) {
+              if (!line.startsWith("data:")) continue;
+              const d = line.slice(5).trim();
+              if (!d || d === "[DONE]") continue;
+              let j;
+              try { j = JSON.parse(d); } catch { continue; }
+              let t = "";
+              if (kind === "anthropic") {
+                if (j.type === "content_block_delta" && j.delta && j.delta.type === "text_delta") t = j.delta.text || "";
+              } else {
+                t = (j.choices && j.choices[0] && j.choices[0].delta && j.choices[0].delta.content) || "";
+              }
+              if (t) emit(ctl, t);
+            }
+          };
+          const ts = new TransformStream({
+            transform(chunk, ctl) {
+              buf = (buf + dec.decode(chunk, { stream: true })).replace(/\r\n/g, "\n");
+              const evs = buf.split("\n\n");
+              buf = evs.pop() || "";
+              evs.forEach((e) => handle(ctl, e));
+            },
+            flush(ctl) { if (buf.trim()) handle(ctl, buf); },
+          });
+          return new Response(res.body.pipeThrough(ts), { status: 200, headers: { "Content-Type": "text/event-stream" } });
+        }
+
+        async function providerChat(engine, body, signal) {
+          const def = CONNECTORS.find((c) => c.id === engine);
+          const cfg = loadConn()[engine] || {};
+          const model = cfg.model || def.model;
+          let res;
+          try {
+            if (def.kind === "anthropic") {
+              res = await fetch("https://api.anthropic.com/v1/messages", {
+                method: "POST",
+                signal,
+                headers: {
+                  "Content-Type": "application/json",
+                  "x-api-key": cfg.key,
+                  "anthropic-version": "2023-06-01",
+                  "anthropic-dangerous-direct-browser-access": "true",
+                },
+                body: JSON.stringify({ model, max_tokens: 8192, stream: true, system: body.system || undefined, messages: toProviderMessages(body.contents, "anthropic") }),
+              });
+            } else {
+              const msgs = toProviderMessages(body.contents, "openai");
+              if (body.system) msgs.unshift({ role: "system", content: body.system });
+              res = await fetch(def.base + "/chat/completions", {
+                method: "POST",
+                signal,
+                headers: { "Content-Type": "application/json", Authorization: "Bearer " + cfg.key },
+                body: JSON.stringify({ model, stream: true, messages: msgs }),
+              });
+            }
+          } catch (e) {
+            if (e && e.name === "AbortError") throw e;
+            return jsonResponse(502, def.name + " couldn't be reached from the browser. Check the key, or your network.");
+          }
+          if (!res.ok) {
+            let m = "Request failed (" + res.status + ").";
+            try { const j = await res.json(); if (j && j.error && j.error.message) m = String(j.error.message); } catch { /* ignore */ }
+            return jsonResponse(res.status, def.name + ": " + m);
+          }
+          return providerStream(res, def.kind);
+        }
+
         async function callChat(body, signal) {
+          const eng = getEngine();
+          if (eng !== "gemini") return providerChat(eng, body, signal);
           const key = await fetchSharedKey(true);
           if (!key) return jsonResponse(503, "API invalid: no API key is connected. The site owner needs to add one.");
           const out = await geminiAsk(key, body, signal);
@@ -3226,18 +3444,15 @@
           renderComposer();
         }
 
-        document.querySelectorAll("[data-tool]").forEach((btn) => {
+document.querySelectorAll("[data-tool]").forEach((btn) => {
           btn.addEventListener("click", () => {
             const k = btn.getAttribute("data-tool");
-            if (k === "plugins") return showToast("Plugins are coming soon. They need a server-side connection.");
-            if (k === "scheduled") return showToast("Scheduled tasks are coming soon. They need a server to run in the background.");
-            state.tool = state.tool === k ? null : k;
-            paintTools();
             if (state.mobileSidebarOpen) {
               state.mobileSidebarOpen = false;
               renderSidebar();
             }
-            if (state.tool && els.promptTextarea) els.promptTextarea.focus();
+            if (location.hash === "#" + k) routeView();
+            else location.hash = "#" + k;
           });
         });
 
@@ -3403,6 +3618,504 @@
           try { if (fbReady()) { pre(sbBase()); fetchSharedKey(true); } } catch { /* ignore */ }
         });
 
+        // ── PLUGINS & SCHEDULED (run in the browser, no server needed) ──
+        const PLUGINS = [
+          { id: "web", name: "Web search", desc: "Lets the AI look things up on Google for current facts and news. (Falls back to normal answers if unavailable.)", prompt: "" },
+          { id: "review", name: "Code reviewer", desc: "Points out bugs, edge cases and risky patterns in any code you share.", prompt: "Plugin: Code reviewer. When code appears in the conversation, review it for bugs, edge cases, performance and security, listing concrete fixes." },
+          { id: "plain", name: "Plain English", desc: "Explains things simply, with short sentences and no jargon.", prompt: "Plugin: Plain English. Explain simply, avoid jargon, and define any technical term the first time you use it." },
+          { id: "concise", name: "Short answers", desc: "Keeps replies brief and to the point.", prompt: "Plugin: Short answers. Keep replies under 150 words unless the user asks for detail or code." },
+          { id: "secure", name: "Security minded", desc: "Applies secure defaults and flags unsafe practices in any code.", prompt: "Plugin: Security minded. Use secure defaults, validate inputs, never hard-code secrets, and flag unsafe practices." },
+          { id: "tests", name: "Add tests", desc: "Includes unit tests with any code the AI writes.", prompt: "Plugin: Add tests. Whenever you write code, also include a small set of unit tests for it." },
+        ];
+        const PLUG_KEY = "xerovin_plugins";
+        const loadPlugs = () => { try { return JSON.parse(localStorage.getItem(PLUG_KEY) || "[]"); } catch { return []; } };
+        const savePlugs = (a) => { try { localStorage.setItem(PLUG_KEY, JSON.stringify(a)); } catch { /* ignore */ } paintCounts(); };
+        const pluginOn = (id) => loadPlugs().includes(id);
+        function pluginPrompt() {
+          const on = loadPlugs();
+          return PLUGINS.filter((p) => p.prompt && on.includes(p.id)).map((p) => p.prompt).join("\n");
+        }
+
+        const schedKey = () => "xerovin_scheduled_" + (state.user ? state.user.id : "guest");
+        const loadSched = () => { try { return JSON.parse(localStorage.getItem(schedKey()) || "[]"); } catch { return []; } };
+        const saveSched = (a) => { try { localStorage.setItem(schedKey(), JSON.stringify(a)); } catch { /* ignore */ } paintCounts(); };
+
+        function paintCounts() {
+          const p = document.getElementById("plug-count");
+          const sc = document.getElementById("sched-count");
+          const np = loadPlugs().length;
+          const ns = state.user ? loadSched().length : 0;
+          if (p) { p.textContent = np; p.classList.toggle("hidden", np === 0); }
+          if (sc) { sc.textContent = ns; sc.classList.toggle("hidden", ns === 0); }
+        }
+
+        function closeSheet() {
+          const el = document.getElementById("xv-sheet-back");
+          if (el) el.remove();
+        }
+        function openSheet(html) {
+          closeSheet();
+          const back = document.createElement("div");
+          back.id = "xv-sheet-back";
+          back.className = "xv-sheet-back";
+          back.innerHTML = '<div class="xv-sheet" role="dialog" aria-modal="true">' + html + "</div>";
+          back.addEventListener("mousedown", (e) => { if (e.target === back) closeSheet(); });
+          document.body.appendChild(back);
+          const x = back.querySelector("[data-sheet-close]");
+          if (x) x.addEventListener("click", closeSheet);
+          return back;
+        }
+        document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeSheet(); });
+        const XSVG = '<button type="button" class="icon-btn" data-sheet-close aria-label="Close"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>';
+
+const fmtWhen = (t) => new Date(t).toLocaleString([], { dateStyle: "medium", timeStyle: "short" });
+        function toLocalInput(ms) {
+          const d = new Date(ms - new Date().getTimezoneOffset() * 60000);
+          return d.toISOString().slice(0, 16);
+        }
+
+                let schedBusy = false;
+        function runDueTask() {
+          paintCounts();
+          if (schedBusy || state.isStreaming || !state.user || !state.token) return;
+          const now = Date.now();
+          const list = loadSched();
+          const due = list.filter((t) => t.at <= now).sort((a, b) => a.at - b.at)[0];
+          if (!due) return;
+          schedBusy = true;
+          try {
+            if (due.repeat === "once") {
+              saveSched(list.filter((t) => t.id !== due.id));
+            } else {
+              const step = due.repeat === "weekly" ? 604800000 : 86400000;
+              while (due.at <= now) due.at += step;
+              saveSched(list);
+            }
+            leaveView();
+            startNewChat();
+            showToast("Running a scheduled task…");
+            handleSendMessage(due.prompt, state.mode);
+          } finally {
+            schedBusy = false;
+          }
+        }
+        setInterval(runDueTask, 20000);
+        window.addEventListener("load", () => { paintCounts(); setTimeout(runDueTask, 3500); });
+
+        // ── SUB-SECTION PAGES ──────────────────────────────────────────
+        const VIEWS = ["inspiration", "3d", "slides", "research", "build", "plugins", "scheduled"];
+        const TOOLS = {
+          inspiration: {
+            title: "Inspiration", html: false,
+            sub: "Fresh ideas, directions and moodboards for whatever you are making.",
+            ph: "What do you want inspiration for? e.g. a name and look for a coffee brand",
+            ex: ["10 startup ideas for students in Lagos", "Landing page style directions for a music app", "Names for a budgeting app"],
+            opts: [{ id: "kind", label: "Type", choices: ["Ideas", "Brand & design", "Writing", "App features", "Names"] }],
+          },
+          "3d": {
+            title: "3D Make", html: true,
+            sub: "Describe a scene or object and get an interactive 3D model you can rotate and zoom.",
+            ph: "Describe what to make. e.g. a floating island with a tiny house and a waterfall",
+            ex: ["A low-poly desert with a campfire", "A rotating solar system", "A glossy sports car on a turntable"],
+            opts: [{ id: "style", label: "Style", choices: ["Realistic", "Low-poly", "Abstract", "Cartoon"] }],
+          },
+          slides: {
+            title: "Slides", html: true,
+            sub: "Turn a topic into a clean slide deck you can click through right here.",
+            ph: "What is the presentation about? e.g. Why small teams should use TypeScript",
+            ex: ["Pitch deck for a food delivery startup", "Introduction to machine learning for beginners", "Quarterly team update"],
+            opts: [
+              { id: "count", label: "Slides", choices: ["4", "6", "8", "10"], def: "6" },
+              { id: "theme", label: "Theme", choices: ["Milk white", "Dark", "Colorful"] },
+            ],
+          },
+          research: {
+            title: "Deep Research", html: false, web: true,
+            sub: "A thorough, structured breakdown of any topic, with findings, tradeoffs and a recommendation.",
+            ph: "What should I research in depth? e.g. Best database for a chat app with 1M users",
+            ex: ["Compare Postgres, MongoDB and DynamoDB for a chat app", "How do mobile money apps make profit?", "What skills matter most for a junior web developer?"],
+            opts: [{ id: "depth", label: "Depth", choices: ["Standard", "Thorough"] }],
+          },
+          build: {
+            title: "Build", html: true,
+            sub: "Describe an app, game or page and get a working version you can try instantly.",
+            ph: "What should I build? e.g. a pomodoro timer with a task list",
+            ex: ["A snake game with a high score", "A tip and bill splitter", "A landing page for a photography studio"],
+            opts: [{ id: "kind", label: "What to build", choices: ["Web app", "Game", "Landing page", "Calculator / tool", "Dashboard"] }],
+          },
+        };
+
+        const tv = { tool: null, contents: [], text: "", busy: false, ctrl: null, tab: "code", device: "desktop", docKey: "", webOn: true };
+        const $ = (id) => document.getElementById(id);
+
+        function leaveView() {
+          if (VIEWS.includes(location.hash.slice(1))) history.pushState(null, "", location.pathname + location.search);
+          hideView();
+        }
+        function hideView() {
+          document.querySelector(".app-shell").classList.remove("tool-mode");
+          $("tool-view").classList.add("hidden");
+          document.querySelectorAll("[data-tool]").forEach((b) => b.classList.remove("on"));
+          renderHeader();
+        }
+        function routeView() {
+          const k = location.hash.slice(1);
+          if (VIEWS.includes(k)) showView(k);
+          else hideView();
+        }
+        function showView(k) {
+          document.querySelector(".app-shell").classList.add("tool-mode");
+          $("tool-view").classList.remove("hidden");
+          document.querySelectorAll("[data-tool]").forEach((b) => b.classList.toggle("on", b.getAttribute("data-tool") === k));
+          const names = { plugins: "Plugins", scheduled: "Scheduled" };
+          els.topbarTitle.textContent = names[k] || TOOLS[k].title;
+          const root = $("tool-root");
+          if (tv.ctrl && tv.tool !== k) { tv.ctrl.abort(); }
+          if (k === "plugins") renderPluginsPage(root);
+          else if (k === "scheduled") renderScheduledPage(root);
+          else renderToolPage(root, k);
+          $("tool-view").scrollTop = 0;
+        }
+        window.addEventListener("hashchange", routeView);
+        [els.sidebarNewChatBtn, els.sidebarBrandBtn].forEach((b) => b && b.addEventListener("click", leaveView));
+        els.threadListContainer.addEventListener("click", (e) => { if (e.target.closest(".thread-select-btn")) leaveView(); });
+
+        const pageHead = (title, sub) =>
+          '<div class="tv-head"><div><h2>' + escapeHtml(title) + "</h2><p>" + escapeHtml(sub) + '</p></div><button type="button" class="tv-back" id="tv-back"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>Back to chat</button></div>';
+        const bindBack = () => { const b = $("tv-back"); if (b) b.addEventListener("click", leaveView); };
+
+        // ---- history per tool ----
+        const tvKey = (k) => "xerovin_tv_" + k + "_" + (state.user ? state.user.id : "guest");
+        const tvLoad = (k) => { try { return JSON.parse(localStorage.getItem(tvKey(k)) || "[]"); } catch { return []; } };
+        const tvSave = (k, a) => { try { localStorage.setItem(tvKey(k), JSON.stringify(a.slice(0, 8))); } catch { /* ignore */ } };
+
+        function renderToolPage(root, k) {
+          const T = TOOLS[k];
+          if (tv.tool !== k) { tv.contents = []; tv.text = ""; tv.docKey = ""; tv.tab = "code"; }
+          tv.tool = k;
+          const opts = T.opts.map((o) =>
+            '<label class="tv-label" for="tvo-' + o.id + '">' + escapeHtml(o.label) + '</label><select id="tvo-' + o.id + '" class="tv-field">' +
+            o.choices.map((c) => '<option value="' + escapeHtml(c) + '"' + (o.def === c ? " selected" : "") + ">" + escapeHtml(c) + "</option>").join("") + "</select>"
+          ).join("");
+          const web = T.web ? '<label class="tv-label" style="display:flex;align-items:center;gap:8px;"><input type="checkbox" id="tv-web" ' + (tv.webOn ? "checked" : "") + "> Use Google search for current facts</label>" : "";
+          root.innerHTML = pageHead(T.title, T.sub) +
+            '<div class="tv-grid"><div class="tv-card"><label class="tv-label" for="tv-prompt">Your idea</label>' +
+            '<textarea id="tv-prompt" class="tv-field" placeholder="' + escapeHtml(T.ph) + '"></textarea>' +
+            '<div class="tv-chips">' + T.ex.map((x, i) => '<button type="button" class="tv-chip" data-ex="' + i + '">' + escapeHtml(x) + "</button>").join("") + "</div>" +
+            opts + web + '<button type="button" id="tv-go" class="tv-go">Generate</button><div id="tv-recent" class="tv-recent"></div></div>' +
+            '<div class="tv-card tv-out" id="tv-out"></div></div>';
+          bindBack();
+          root.querySelectorAll("[data-ex]").forEach((b) => b.addEventListener("click", () => { $("tv-prompt").value = T.ex[Number(b.getAttribute("data-ex"))]; $("tv-prompt").focus(); }));
+          const w = $("tv-web"); if (w) w.addEventListener("change", () => { tv.webOn = w.checked; });
+          $("tv-go").addEventListener("click", () => (tv.busy ? tv.ctrl && tv.ctrl.abort() : tvStart()));
+          $("tv-prompt").addEventListener("keydown", (e) => { if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) tvStart(); });
+          tvRecent();
+          tvPaintOut(true);
+          paintGo();
+        }
+
+        function paintGo() { const g = $("tv-go"); if (!g) return; g.textContent = tv.busy ? "Stop" : "Generate"; g.classList.toggle("stop", tv.busy); }
+
+        function tvRecent() {
+          const box = $("tv-recent"); if (!box) return;
+          const list = tvLoad(tv.tool);
+          if (!list.length) { box.innerHTML = ""; return; }
+          box.innerHTML = "<b>Recent</b>" + list.map((h, i) => '<button type="button" data-h="' + i + '" title="' + escapeHtml(h.title) + '">' + escapeHtml(h.title) + "</button>").join("");
+          box.querySelectorAll("[data-h]").forEach((b) => b.addEventListener("click", () => {
+            const h = list[Number(b.getAttribute("data-h"))]; if (!h) return;
+            tv.contents = h.contents; tv.docKey = ""; tv.tab = "preview";
+            const lastModel = [...h.contents].reverse().find((m) => m.role === "model");
+            tv.text = lastModel ? lastModel.parts.map((p) => p.text || "").join("") : "";
+            tvPaintOut(true);
+          }));
+        }
+
+        function tvUserText(text) {
+          const T = TOOLS[tv.tool];
+          const lines = T.opts.map((o) => { const el = $("tvo-" + o.id); return el ? o.label + ": " + el.value : ""; }).filter(Boolean);
+          return (lines.length ? lines.join("\n") + "\n\n" : "") + text;
+        }
+
+        function tvStart() {
+          const text = ($("tv-prompt").value || "").trim();
+          if (!text) { showToast("Write your idea first."); return; }
+          tv.contents = [];
+          tvRun(tvUserText(text), text);
+        }
+
+        async function readGeminiSSE(res, onText, signal) {
+          const reader = res.body.getReader();
+          const dec = new TextDecoder();
+          let buf = "";
+          const take = (raw) => {
+            const line = raw.trim();
+            if (!line.startsWith("data:")) return;
+            let evt; try { evt = JSON.parse(line.slice(5).trim()); } catch { return; }
+            const cand = evt.candidates && evt.candidates[0];
+            const parts = (cand && cand.content && cand.content.parts) || [];
+            for (const p of parts) if (p.text && !p.thought) onText(p.text);
+          };
+          while (true) {
+            if (signal && signal.aborted) break;
+            const { value, done } = await reader.read();
+            if (done) break;
+            buf = (buf + dec.decode(value, { stream: true })).replace(/\r\n/g, "\n");
+            const evs = buf.split("\n\n"); buf = evs.pop() || "";
+            evs.forEach(take);
+          }
+          if (buf.trim()) take(buf);
+        }
+
+        async function tvRun(userText, title) {
+          if (tv.busy) return;
+          if (!state.user || !state.token) { openAuthModal("register", "Create a free account or sign in to use this tool."); return; }
+          const k = tv.tool;
+          tv.contents.push({ role: "user", parts: [{ text: userText }] });
+          tv.busy = true; tv.text = ""; tv.docKey = ""; tv.tab = "code";
+          const ctrl = new AbortController(); tv.ctrl = ctrl;
+          const pw = $("tv-pwrap"); if (pw) pw.innerHTML = "";
+          paintGo(); tvErr(""); tvPaintOut(false);
+          let raf = 0;
+          const body = {
+            depth: "medium",
+            system: [BASE_PROMPT, TOOL_PROMPTS[k] || "", pluginPrompt()].filter(Boolean).join("\n\n"),
+            webSearch: (TOOLS[k].web && tv.webOn) || pluginOn("web"),
+            contents: tv.contents.slice(),
+          };
+          try {
+            const res = await callChat(body, ctrl.signal);
+            if (!res.ok) throw new Error(await readApiError(res));
+            await readGeminiSSE(res, (t) => {
+              tv.text += t;
+              if (!raf) raf = requestAnimationFrame(() => { raf = 0; if (tv.tool === k) tvPaintOut(false); });
+            }, ctrl.signal);
+            if (!tv.text) throw new Error("The AI returned an empty response. Please try again.");
+            tv.contents.push({ role: "model", parts: [{ text: tv.text }] });
+            let list = tvLoad(k);
+            if (title) {
+              list = list.filter((h) => h.title !== title);
+              list.unshift({ title, ts: Date.now(), contents: tv.contents.slice() });
+            } else if (list.length) {
+              list[0].contents = tv.contents.slice();
+            }
+            tvSave(k, list);
+          } catch (e) {
+            if (!(e && e.name === "AbortError")) tvErr(e instanceof TypeError ? "Network error. Check your connection." : (e && e.message) || "Something went wrong.");
+            if (tv.contents.length && tv.contents[tv.contents.length - 1].role === "user") tv.contents.pop();
+          } finally {
+            tv.busy = false; tv.ctrl = null;
+            if (tv.tool === k && $("tv-out")) { paintGo(); tvPaintOut(true); tvRecent(); }
+          }
+        }
+
+        function tvErr(msg) {
+          const out = $("tv-out"); if (!out) return;
+          let e = $("tv-err");
+          if (!msg) { if (e) e.remove(); return; }
+          if (!e) { e = document.createElement("div"); e.id = "tv-err"; e.className = "tv-err"; out.prepend(e); }
+          e.textContent = msg;
+        }
+
+        function richHtml(text) {
+          return parseMarkdownSegments(text).map((seg) => {
+            if (seg.type === "code") {
+              if (TOOLS[tv.tool] && TOOLS[tv.tool].html && isPreviewable(seg.lang)) return "";
+              return '<div class="code-card"><div class="code-card-header"><span class="code-lang">' + escapeHtml(seg.lang) + '</span></div><pre class="code-pre"><code>' + escapeHtml(seg.content) + "</code></pre></div>";
+            }
+            return renderTextBlock(seg.content.trim());
+          }).join("");
+        }
+
+        function tvPaintOut(final) {
+          const out = $("tv-out"); if (!out) return;
+          const T = TOOLS[tv.tool];
+          const errEl = $("tv-err"); const errText = errEl ? errEl.textContent : "";
+          if (!tv.text && !tv.busy) {
+            out.innerHTML = '<div class="tv-empty">Your result will appear here.</div>';
+            if (errText) tvErr(errText);
+            return;
+          }
+          if (!$("tv-prose")) {
+            out.innerHTML = '<div id="tv-prose" class="tv-prose"></div><div id="tv-pwrap"></div><div class="tv-refine hidden" id="tv-refine"><input id="tv-refine-in" class="tv-field" placeholder="Ask for a change, e.g. make it darker"><button type="button" id="tv-refine-go">Refine</button></div>';
+            $("tv-refine-go").addEventListener("click", () => {
+              const v = ($("tv-refine-in").value || "").trim(); if (!v) return;
+              $("tv-refine-in").value = ""; tvRun(v, null);
+            });
+            $("tv-refine-in").addEventListener("keydown", (e) => { if (e.key === "Enter") $("tv-refine-go").click(); });
+            if (errText) tvErr(errText);
+          }
+          const segs = parseMarkdownSegments(tv.text);
+          const codes = segs.filter((x) => x.type === "code");
+          const lastHtml = [...codes].reverse().find((x) => isPreviewable(x.lang));
+          $("tv-prose").innerHTML = '<div class="assistant-prose">' + (tv.busy && !tv.text ? "Thinking…" : richHtml(tv.text)) + "</div>";
+          if (T.html && lastHtml) tvPreviewCard(lastHtml, final || !tv.busy);
+          $("tv-refine").classList.toggle("hidden", tv.busy || !tv.text);
+        }
+
+        function tvPreviewCard(seg, done) {
+          const wrap = $("tv-pwrap");
+          if (!$("tv-pcard")) {
+            wrap.innerHTML = '<div class="tv-pcard" id="tv-pcard"><div class="tv-pbar"><div class="l"><span class="pv-dot" id="tvp-dot"></span><span>Live preview</span><span class="pv-status" id="tvp-status"></span></div><div class="r">' +
+              '<div class="pv-seg"><button type="button" id="tvp-tab-preview">Preview</button><button type="button" id="tvp-tab-code">Code</button></div>' +
+              '<div class="pv-seg" id="tvp-dev"><button type="button" id="tvp-d">Desktop</button><button type="button" id="tvp-m">Mobile</button></div>' +
+              '<button type="button" class="tv-mini" id="tvp-copy">Copy</button><button type="button" class="tv-mini" id="tvp-dl">Download</button><button type="button" class="tv-mini hidden" id="tvp-gist">Save to Gist</button></div></div>' +
+              '<div class="pv-body tv-pbody"><div id="tvp-frame-wrap" class="pv-frame-wrap"><iframe id="tvp-frame" class="pv-frame" sandbox="allow-scripts allow-forms allow-modals allow-popups" title="Live preview"></iframe></div><div id="tvp-code" class="pv-code hidden"><pre id="tvp-code-text"></pre></div></div></div>';
+            $("tvp-tab-preview").addEventListener("click", () => { tv.tab = "preview"; tvPreviewDraw(); });
+            $("tvp-tab-code").addEventListener("click", () => { tv.tab = "code"; tvPreviewDraw(); });
+            $("tvp-d").addEventListener("click", () => { tv.device = "desktop"; tvPreviewDraw(); });
+            $("tvp-m").addEventListener("click", () => { tv.device = "mobile"; tvPreviewDraw(); });
+            $("tvp-copy").addEventListener("click", async () => { try { await navigator.clipboard.writeText(tv.pcode); showToast("Code copied"); } catch { showToast("Couldn't copy"); } });
+            $("tvp-dl").addEventListener("click", () => {
+              const blob = new Blob([previewDoc(tv.plang, tv.pcode)], { type: "text/html" });
+              const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = (tv.tool || "xerovin") + ".html";
+              document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+            });
+            $("tvp-gist").addEventListener("click", saveGist);
+          }
+          const hasGh = !!(loadConn().github && loadConn().github.key);
+          $("tvp-gist").classList.toggle("hidden", !hasGh);
+          tv.plang = seg.lang; tv.pcode = seg.content; tv.pdone = done;
+          if (done && !tv.autoShown) { tv.autoShown = true; tv.tab = "preview"; tv.docKey = ""; }
+          if (!done) { tv.autoShown = false; tv.tab = "code"; }
+          tvPreviewDraw();
+        }
+
+        function tvPreviewDraw() {
+          if (!$("tvp-frame")) return;
+          const tab = tv.tab;
+          $("tvp-dot").classList.toggle("busy", !tv.pdone);
+          $("tvp-status").textContent = tv.pdone ? "Ready" : "Generating…";
+          $("tvp-tab-preview").classList.toggle("on", tab === "preview");
+          $("tvp-tab-code").classList.toggle("on", tab === "code");
+          $("tvp-dev").classList.toggle("hidden", tab !== "preview");
+          $("tvp-d").classList.toggle("on", tv.device === "desktop");
+          $("tvp-m").classList.toggle("on", tv.device === "mobile");
+          $("tvp-frame-wrap").classList.toggle("hidden", tab !== "preview");
+          $("tvp-frame-wrap").classList.toggle("mobile", tv.device === "mobile");
+          $("tvp-code").classList.toggle("hidden", tab !== "code");
+          if (tab === "code") {
+            const pre = $("tvp-code-text");
+            if (pre.textContent !== tv.pcode) { pre.textContent = tv.pcode; if (!tv.pdone) $("tvp-code").scrollTop = $("tvp-code").scrollHeight; }
+          } else {
+            const key = tv.plang + "\n" + tv.pcode;
+            if (key !== tv.docKey) { tv.docKey = key; $("tvp-frame").srcdoc = previewDoc(tv.plang, tv.pcode); }
+          }
+        }
+
+        async function saveGist() {
+          const gh = loadConn().github;
+          if (!gh || !gh.key) return showToast("Connect GitHub in Plugins first.");
+          showToast("Saving to GitHub…");
+          try {
+            const r = await fetch("https://api.github.com/gists", {
+              method: "POST",
+              headers: { Authorization: "Bearer " + gh.key, "Content-Type": "application/json", Accept: "application/vnd.github+json" },
+              body: JSON.stringify({ description: "Made with XEROVIN (" + (tv.tool || "page") + ")", public: false, files: { "index.html": { content: previewDoc(tv.plang, tv.pcode) } } }),
+            });
+            const j = await r.json();
+            if (!r.ok) throw new Error(j.message || "GitHub refused the request.");
+            window.open(j.html_url, "_blank", "noopener");
+            showToast("Saved as a private Gist");
+          } catch (e) { showToast("GitHub: " + ((e && e.message) || "failed")); }
+        }
+
+        // ---- Plugins page (Connectors + Add-ons) ----
+        let plugTab = "connectors";
+        function renderPluginsPage(root) {
+          root.innerHTML = pageHead("Plugins", "Connect other AI engines and services, and switch on add-ons that change how the AI answers.") +
+            '<div class="pv-seg" style="margin-bottom:16px"><button type="button" id="pl-t1">Connectors</button><button type="button" id="pl-t2">Add-ons</button></div><div id="pl-body" style="max-width:760px"></div>';
+          bindBack();
+          $("pl-t1").addEventListener("click", () => { plugTab = "connectors"; renderPluginsPage(root); });
+          $("pl-t2").addEventListener("click", () => { plugTab = "addons"; renderPluginsPage(root); });
+          $("pl-t1").classList.toggle("on", plugTab === "connectors");
+          $("pl-t2").classList.toggle("on", plugTab === "addons");
+          const body = $("pl-body");
+          if (plugTab === "addons") {
+            const on = loadPlugs();
+            body.innerHTML = PLUGINS.map((p) => '<label class="xv-row tv-card" style="margin-bottom:10px"><div><b>' + escapeHtml(p.name) + '</b><span class="d">' + escapeHtml(p.desc) + '</span></div><span class="xv-switch"><input type="checkbox" data-plug="' + p.id + '"' + (on.includes(p.id) ? " checked" : "") + "><i></i></span></label>").join("");
+            body.querySelectorAll("[data-plug]").forEach((c) => c.addEventListener("change", () => {
+              const cur = new Set(loadPlugs());
+              if (c.checked) cur.add(c.getAttribute("data-plug")); else cur.delete(c.getAttribute("data-plug"));
+              savePlugs([...cur]);
+            }));
+            return;
+          }
+          drawConnectors(body);
+        }
+
+        function drawConnectors(body) {
+          const conn = loadConn();
+          const eng = getEngine();
+          body.innerHTML = '<p class="cx-warn" style="margin-bottom:12px">Keys you add here are saved only in this browser and sent only to the service they belong to. Pick one engine to answer your chats and tool pages.</p>' +
+            CONNECTORS.map((c) => {
+              const cfg = conn[c.id] || {};
+              const connected = c.builtin || !!cfg.key;
+              const isEng = eng === c.id;
+              let state = c.unavailable ? '<span class="cx-state">Unavailable</span>' : isEng ? '<span class="cx-state engine">Active engine</span>' : connected ? '<span class="cx-state on">Connected</span>' : '<span class="cx-state">Not connected</span>';
+              let inner = "";
+              if (c.unavailable) inner = '<p class="cx-warn">' + escapeHtml(c.unavailable) + "</p>";
+              else if (c.builtin) inner = isEng ? "" : '<div class="cx-row"><button type="button" class="xv-btn" data-use="gemini">Use Gemini</button></div>';
+              else inner = '<div class="cx-row"><input class="tv-field" type="password" autocomplete="off" data-key="' + c.id + '" placeholder="' + escapeHtml(cfg.key ? "Key saved (" + cfg.key.slice(0, 4) + "…" + cfg.key.slice(-3) + "). Paste to replace" : (c.hint || "API key")) + '">' +
+                (c.model ? '<input class="tv-field" data-model="' + c.id + '" value="' + escapeHtml(cfg.model || c.model) + '" title="Model name" style="max-width:230px">' : "") +
+                '</div><div class="cx-row"><button type="button" class="xv-btn" data-save="' + c.id + '">' + (cfg.key ? "Update" : "Connect") + "</button>" +
+                (cfg.key && c.kind !== "github" && !isEng ? '<button type="button" class="xv-btn ghost" data-use="' + c.id + '">Use as engine</button>' : "") +
+                (cfg.key ? '<button type="button" class="xv-btn ghost" data-rm="' + c.id + '">Remove</button>' : "") + "</div>";
+              return '<div class="cx-card"><div class="cx-top"><div class="cx-logo"><img src="https://www.google.com/s2/favicons?domain=' + c.domain + '&sz=128" alt="" width="24" height="24" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'"><span class="cx-letter">' + escapeHtml(c.name.charAt(0)) + '</span></div><div class="t"><b>' + escapeHtml(c.name) + "</b><span>" + escapeHtml(c.by) + "</span></div>" + state + '</div><div class="cx-body">' + inner + "</div></div>";
+            }).join("");
+          const again = () => { drawConnectors(body); paintEngine(); };
+          body.querySelectorAll("[data-use]").forEach((b) => b.addEventListener("click", () => { setEngine(b.getAttribute("data-use")); showToast("Engine switched"); again(); }));
+          body.querySelectorAll("[data-rm]").forEach((b) => b.addEventListener("click", () => {
+            const id = b.getAttribute("data-rm"); const o = loadConn(); delete o[id]; saveConn(o);
+            if (localStorage.getItem(ENGINE_KEY) === id) setEngine("gemini");
+            again();
+          }));
+          body.querySelectorAll("[data-save]").forEach((b) => b.addEventListener("click", () => {
+            const id = b.getAttribute("data-save"); const o = loadConn(); const cur = o[id] || {};
+            const keyEl = body.querySelector('[data-key="' + id + '"]'); const modelEl = body.querySelector('[data-model="' + id + '"]');
+            const key = (keyEl.value || "").trim() || cur.key;
+            if (!key) return showToast("Paste the key first.");
+            o[id] = { key, model: modelEl ? (modelEl.value || "").trim() : undefined };
+            saveConn(o);
+            const def = CONNECTORS.find((c) => c.id === id);
+            if (def.kind !== "github") setEngine(id);
+            showToast(def.name + " connected");
+            again();
+          }));
+        }
+
+        // ---- Scheduled page ----
+        function renderScheduledPage(root) {
+          root.innerHTML = pageHead("Scheduled", "Ask the AI to run a prompt at a set time, once or repeating.") +
+            '<div class="tv-card" style="max-width:760px"><label class="tv-label" for="sched-prompt">What should the AI do?</label><textarea id="sched-prompt" class="tv-field" placeholder="e.g. Give me 5 startup ideas for today"></textarea>' +
+            '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div><label class="tv-label" for="sched-when">When</label><input id="sched-when" type="datetime-local" class="tv-field" value="' + toLocalInput(Date.now() + 3600000) + '"></div>' +
+            '<div><label class="tv-label" for="sched-repeat">Repeat</label><select id="sched-repeat" class="tv-field"><option value="once">Once</option><option value="daily">Every day</option><option value="weekly">Every week</option></select></div></div>' +
+            '<button type="button" id="sched-add" class="tv-go">Add task</button><div id="sched-list" style="margin-top:14px"></div>' +
+            '<p class="xv-note">Tasks run while xerovin.com is open in your browser. If it was closed at the time, the task runs the next time you open the site. They are saved on this device only.</p></div>';
+          bindBack();
+          const draw = () => {
+            const list = state.user ? loadSched().sort((a, b) => a.at - b.at) : [];
+            const box = $("sched-list");
+            box.innerHTML = list.length
+              ? list.map((t) => '<div class="xv-row"><div><b>' + escapeHtml(t.prompt.length > 70 ? t.prompt.slice(0, 70) + "…" : t.prompt) + '</b><span class="d">' + escapeHtml(fmtWhen(t.at)) + " · " + (t.repeat === "once" ? "once" : t.repeat) + '</span></div><button type="button" class="xv-btn ghost" data-del="' + t.id + '">Delete</button></div>').join("")
+              : '<p class="xv-sub" style="margin:8px 0 0;color:var(--ink-muted);font-size:13px">No scheduled tasks yet.</p>';
+            box.querySelectorAll("[data-del]").forEach((b) => b.addEventListener("click", () => { saveSched(loadSched().filter((t) => t.id !== b.getAttribute("data-del"))); draw(); }));
+          };
+          $("sched-add").addEventListener("click", () => {
+            if (!state.user) return openAuthModal("register", "Create a free account or sign in to schedule tasks.");
+            const prompt = $("sched-prompt").value.trim();
+            const at = new Date($("sched-when").value).getTime();
+            if (!prompt) return showToast("Write what the AI should do.");
+            if (!at || Number.isNaN(at)) return showToast("Pick a date and time.");
+            const list = loadSched();
+            list.push({ id: "s" + Date.now().toString(36) + Math.random().toString(36).slice(2, 5), prompt, at, repeat: $("sched-repeat").value });
+            saveSched(list); $("sched-prompt").value = ""; draw(); showToast("Scheduled for " + fmtWhen(at));
+          });
+          draw();
+        }
+
+        window.addEventListener("load", () => { paintEngine(); routeView(); });
+        setTimeout(() => { paintEngine(); routeView(); }, 700);
+
         async function executeStream(payload) {
           setErrorBanner(null);
 
@@ -3444,10 +4157,11 @@
           const convo = state.messages;
           renderAll();
 
-          const system = [BASE_PROMPT, MODE_PROMPTS[payload.mode] || "", TOOL_PROMPTS[state.tool] || ""].filter(Boolean).join("\n\n");
+          const system = [BASE_PROMPT, MODE_PROMPTS[payload.mode] || "", TOOL_PROMPTS[state.tool] || "", pluginPrompt()].filter(Boolean).join("\n\n");
           const body = {
             depth: payload.depth,
             system,
+            webSearch: pluginOn("web"),
             contents: buildContents(history, prompt, payload),
           };
 
