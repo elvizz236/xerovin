@@ -2010,8 +2010,8 @@
         // in your Supabase database. Removing it there disconnects the AI for everyone.
         // ── ONE-TIME SETUP: paste these two values from your free Supabase project (see instructions) ──
         // They are NOT secret. Your Gemini key and admin password never go in this file.
-        const SUPABASE_URL = "https://mvdhltrgvojqbvmdtite.supabase.co/rest/v1/"; // e.g. https://abcdxyz.supabase.co
-        const SUPABASE_ANON_KEY = "sb_publishable_bRu8KK7EQKF4suRy2WhFVQ_WBE8YqNL";
+        const SUPABASE_URL = "PASTE_SUPABASE_PROJECT_URL"; // e.g. https://abcdxyz.supabase.co
+        const SUPABASE_ANON_KEY = "PASTE_SUPABASE_ANON_OR_PUBLISHABLE_KEY";
         const CHAT_ENDPOINT = "gemini-direct";
         const GEMINI_MODELS = [
           { id: "gemini-3.5-flash-lite", levels: { low: "MINIMAL", medium: "MINIMAL", high: "LOW", xhigh: "MEDIUM" } },
@@ -3451,7 +3451,11 @@
         let admData = null;
 
         const fbReady = () => isConfigured(SUPABASE_URL) && isConfigured(SUPABASE_ANON_KEY);
-        const sbBase = () => SUPABASE_URL.replace(/\/+$/, "");
+        const sbBase = () => {
+          let u = String(SUPABASE_URL || "").trim();
+          if (!/^https?:\/\//i.test(u)) u = "https://" + u;
+          try { return new URL(u).origin; } catch { return u.replace(/\/+$/, ""); }
+        };
         const sbHeaders = (token) => {
           const h = { apikey: SUPABASE_ANON_KEY, "Content-Type": "application/json" };
           if (token) h.Authorization = "Bearer " + token;
@@ -3472,6 +3476,21 @@
           }
         }
 
+        const ADMIN_LOGIN_EMAIL = "admin@xerovin.com"; // internal login name for the single admin account; not a real mailbox
+
+        async function adminIsSetUp() {
+          if (!fbReady()) throw new Error("Setup not finished: add SUPABASE_URL and SUPABASE_ANON_KEY at the top of index.html.");
+          let r;
+          try {
+            r = await fetch(sbBase() + "/rest/v1/config?key=eq.admin_ready&select=value&t=" + Date.now(), { headers: sbHeaders(), cache: "no-store" });
+          } catch {
+            throw new Error("Network error. Check your connection.");
+          }
+          if (!r.ok) throw new Error("Supabase says " + r.status + ". Check SUPABASE_URL, the key, and that the config table from the instructions exists.");
+          const rows = await r.json().catch(() => []);
+          return Array.isArray(rows) && rows.length > 0;
+        }
+
         const maskKey = (key) => (key.length > 10 ? key.slice(0, 4) + "…" + key.slice(-4) : "••••");
 
         async function keyStatus(key) {
@@ -3490,32 +3509,52 @@
             return e;
           };
           if (!fbReady()) throw bad("Setup not finished: add SUPABASE_URL and SUPABASE_ANON_KEY at the top of index.html.", 500);
-          if (action === "login") {
-            const email = String((opts.body && opts.body.id) || "").trim();
-            const password = String((opts.body && opts.body.password) || "");
+          if (/supabase\.com\/dashboard|app\.supabase\.com/i.test(SUPABASE_URL) || !/\.supabase\.(co|in)$/i.test(new URL(sbBase()).hostname))
+            throw bad("SUPABASE_URL looks wrong. It must be your Project URL, like https://abcdxyz.supabase.co (Project Settings → API), not the dashboard link.", 500);
+          const authCall = async (path, password) => {
             let r;
             try {
-              r = await fetch(sbBase() + "/auth/v1/token?grant_type=password", {
+              r = await fetch(sbBase() + path, {
                 method: "POST",
                 headers: sbHeaders(),
-                body: JSON.stringify({ email, password }),
+                body: JSON.stringify({ email: ADMIN_LOGIN_EMAIL, password }),
               });
             } catch {
               throw bad("Network error. Check your connection.", 502);
             }
             const j = await r.json().catch(() => ({}));
-            if (!r.ok || !j.access_token) {
-              const code = String(j.error_code || j.error || "");
-              const detail = String(j.msg || j.message || j.error_description || "");
-              if (code === "email_not_confirmed" || /not confirmed/i.test(detail))
-                throw bad("This user isn't confirmed yet. In Supabase open Authentication → Users, click the user and confirm it (or delete it and re-add with Auto Confirm User ticked).", 401);
-              if (/api key|apikey/i.test(detail) || code === "no_authorization")
-                throw bad("Supabase rejected SUPABASE_ANON_KEY. Re-copy the publishable/anon key (not the secret key) into index.html.", 401);
-              if (code === "invalid_credentials" || /invalid login/i.test(detail))
-                throw bad("Supabase says the email or password doesn't match a user. Check Authentication → Users for exactly elvistypeshii@gmail.com, and reset its password to Student@2023 if unsure.", 401);
-              throw bad("Login failed (" + r.status + "): " + (detail || code || "unknown error"), 401);
+            return { r, j, detail: String(j.msg || j.message || j.error_description || ""), code: String(j.error_code || j.error || "") };
+          };
+          const apiKeyProblem = (a) => /api key|apikey/i.test(a.detail) || a.code === "no_authorization";
+          if (action === "login") {
+            const code = String((opts.body && opts.body.password) || "");
+            const a = await authCall("/auth/v1/token?grant_type=password", code);
+            if (!a.r.ok || !a.j.access_token) {
+              if (apiKeyProblem(a)) throw bad("Supabase rejected SUPABASE_ANON_KEY. Re-copy the publishable/anon key (not the secret key) into index.html.", 401);
+              if (a.code === "invalid_credentials" || /invalid login/i.test(a.detail)) throw bad("Wrong code.", 401);
+              throw bad("Login failed (" + a.r.status + "): " + (a.detail || a.code || "unknown error"), 401);
             }
-            return { token: j.access_token };
+            return { token: a.j.access_token };
+          }
+          if (action === "setup") {
+            if (await adminIsSetUp()) throw bad("Admin is already set up. Sign-up is locked.", 403);
+            const code = String((opts.body && opts.body.password) || "");
+            if (!/^\d{6}$/.test(code)) throw bad("The code must be exactly 6 digits.", 400);
+            const a = await authCall("/auth/v1/signup", code);
+            if (!a.r.ok) {
+              if (apiKeyProblem(a)) throw bad("Supabase rejected SUPABASE_ANON_KEY. Re-copy the publishable/anon key (not the secret key) into index.html.", 401);
+              if (/already|exist|Admin already created|database error/i.test(a.detail + a.code)) throw bad("Admin was already created, so sign-up is locked. Reload and enter your code.", 403);
+              if (/disabled|not allowed/i.test(a.detail + a.code)) throw bad("Sign-ups are switched off in Supabase. Turn on Authentication → Sign In / Providers → \"Allow new users to sign up\" for the first setup.", 500);
+              throw bad("Setup failed (" + a.r.status + "): " + (a.detail || a.code || "unknown error"), 500);
+            }
+            if (!a.j.access_token) throw bad("Turn OFF \"Confirm email\" in Supabase (Authentication → Sign In / Providers → Email), delete the user that was just created, then try again.", 500);
+            const w = await fetch(sbBase() + "/rest/v1/config?on_conflict=key", {
+              method: "POST",
+              headers: { ...sbHeaders(a.j.access_token), Prefer: "resolution=merge-duplicates,return=minimal" },
+              body: JSON.stringify({ key: "admin_ready", value: "1" }),
+            });
+            if (!w.ok) throw bad("Code created, but the database table isn't set up (" + w.status + "). Run the SQL from the instructions, then sign in.", 500);
+            return { token: a.j.access_token };
           }
           const token = admToken();
           if (!token) {
@@ -3576,42 +3615,56 @@
           '<svg width="20" height="20" viewBox="0 0 40 40" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M5 6H13.5L20 15.2L26.5 6H35L23.4 20L35 34H26.5L20 24.8L13.5 34H5L16.6 20L5 6ZM20 16.4L22.8 20L20 23.6L17.2 20L20 16.4Z" fill="currentColor"/><path d="M5 6H13.5L20 15.2L16.6 20L5 6Z" fill="currentColor" fill-opacity="0.88"/><path d="M23.4 20L35 6H26.5L20 15.2L23.4 20Z" fill="currentColor" fill-opacity="0.58"/><path d="M5 34H13.5L20 24.8L16.6 20L5 34Z" fill="currentColor" fill-opacity="0.58"/></svg>';
 
         function renderAdminLogin() {
-          admRoot.innerHTML = `
+          const shell = (inner) => {
+            admRoot.innerHTML = `
             <div class="adm-login">
               <div class="adm-card adm-login-card">
                 <div class="modal-brand">${LOGO_SVG}<span class="brand-wordmark" style="font-size:14px;">XEROVIN</span><span class="adm-tag">Admin</span></div>
-                <h2 class="modal-title" style="font-size:22px;">Admin sign in</h2>
-                <p class="modal-desc">Only the site owner can open this panel.</p>
-                <form id="adm-login-form" class="auth-form" novalidate>
-                  <div class="field-group">
-                    <label class="field-label" for="adm-id">Email or username</label>
-                    <input id="adm-id" class="field-input" type="text" autocomplete="username" />
-                  </div>
-                  <div class="field-group">
-                    <label class="field-label" for="adm-pw">Password</label>
-                    <input id="adm-pw" class="field-input" type="password" autocomplete="current-password" />
-                  </div>
-                  <div id="adm-login-err" class="auth-error hidden" role="alert"></div>
-                  <button id="adm-login-btn" type="submit" class="auth-submit">Sign in</button>
-                  <button id="adm-back" type="button" class="btn-outline" style="height:40px;">Back to site</button>
-                </form>
+                ${inner}
               </div>
             </div>`;
+          };
+          shell('<h2 class="modal-title" style="font-size:22px;">Admin</h2><p class="modal-desc">Checking…</p>');
+          adminIsSetUp().then(
+            (ready) => drawAdminLogin(shell, ready),
+            (ex) => {
+              shell(`<h2 class="modal-title" style="font-size:22px;">Can't reach the database</h2><p class="modal-desc">${escapeHtml(ex.message)}</p><button id="adm-back" type="button" class="btn-outline" style="height:40px;">Back to site</button>`);
+              document.getElementById("adm-back").addEventListener("click", admClose);
+            }
+          );
+        }
+
+        function drawAdminLogin(shell, ready) {
+          shell(`
+                <h2 class="modal-title" style="font-size:22px;">${ready ? "Enter your admin code" : "Create your admin code"}</h2>
+                <p class="modal-desc">${ready ? "Only the site owner can open this panel." : "First-time setup. Choose a 6-digit code. After this, sign-up is locked forever and this code is your login."}</p>
+                <form id="adm-login-form" class="auth-form" novalidate>
+                  <div class="field-group">
+                    <label class="field-label" for="adm-pw">6-digit code</label>
+                    <input id="adm-pw" class="field-input" type="password" inputmode="numeric" maxlength="6" autocomplete="${ready ? "current-password" : "new-password"}" />
+                  </div>
+                  ${ready ? "" : `<div class="field-group">
+                    <label class="field-label" for="adm-pw2">Repeat the code</label>
+                    <input id="adm-pw2" class="field-input" type="password" inputmode="numeric" maxlength="6" autocomplete="new-password" />
+                  </div>`}
+                  <div id="adm-login-err" class="auth-error hidden" role="alert"></div>
+                  <button id="adm-login-btn" type="submit" class="auth-submit">${ready ? "Sign in" : "Create code & sign in"}</button>
+                  <button id="adm-back" type="button" class="btn-outline" style="height:40px;">Back to site</button>
+                </form>`);
           document.getElementById("adm-back").addEventListener("click", admClose);
           document.getElementById("adm-login-form").addEventListener("submit", async (e) => {
             e.preventDefault();
             const err = document.getElementById("adm-login-err");
             const btn = document.getElementById("adm-login-btn");
             err.classList.add("hidden");
+            const code = document.getElementById("adm-pw").value.trim();
             btn.disabled = true;
             try {
-              const out = await admApi("login", {
-                method: "POST",
-                body: {
-                  id: document.getElementById("adm-id").value,
-                  password: document.getElementById("adm-pw").value,
-                },
-              });
+              if (!ready) {
+                if (!/^\d{6}$/.test(code)) throw new Error("The code must be exactly 6 digits.");
+                if (code !== document.getElementById("adm-pw2").value.trim()) throw new Error("The two codes don't match.");
+              }
+              const out = await admApi(ready ? "login" : "setup", { method: "POST", body: { password: code } });
               try {
                 sessionStorage.setItem(ADMIN_TOKEN_KEY, out.token);
               } catch {
@@ -3625,7 +3678,7 @@
             }
           });
           setTimeout(() => {
-            const f = document.getElementById("adm-id");
+            const f = document.getElementById("adm-pw");
             if (f) f.focus();
           }, 30);
         }
