@@ -2004,14 +2004,14 @@
     <script>
       (() => {
         // ── AI SETTINGS ──────────────────────────────────────────────
-        // NO API KEY GOES IN THIS FILE. Ever. Public GitHub repos are scanned and
+        // NO GEMINI KEY GOES IN THIS FILE. Ever. Public GitHub repos are scanned and
         // Google switches off any key it finds, which is what breaks the chat.
-        // The Gemini key is typed into the admin panel (open xerovin.com/#admin) and stored
-        // encrypted in your database by api/app.js. It is never in this file.
-        // ── ONE-TIME SETUP: paste these two values from your free Firebase project (see instructions) ──
+        // The Gemini key is typed into the admin panel (open xerovin.com/#admin) and saved
+        // in your Supabase database. Removing it there disconnects the AI for everyone.
+        // ── ONE-TIME SETUP: paste these two values from your free Supabase project (see instructions) ──
         // They are NOT secret. Your Gemini key and admin password never go in this file.
-        const FIREBASE_API_KEY = "PASTE_FIREBASE_WEB_API_KEY";
-        const FIREBASE_DB_URL = "PASTE_FIREBASE_DATABASE_URL"; // e.g. https://xerovin-default-rtdb.firebaseio.com
+        const SUPABASE_URL = "PASTE_SUPABASE_PROJECT_URL"; // e.g. https://abcdxyz.supabase.co
+        const SUPABASE_ANON_KEY = "PASTE_SUPABASE_ANON_OR_PUBLISHABLE_KEY";
         const CHAT_ENDPOINT = "gemini-direct";
         const GEMINI_MODELS = [
           { id: "gemini-3.5-flash-lite", levels: { low: "MINIMAL", medium: "MINIMAL", high: "LOW", xhigh: "MEDIUM" } },
@@ -3450,16 +3450,22 @@
         let admRange = "week";
         let admData = null;
 
-        const fbReady = () => isConfigured(FIREBASE_API_KEY) && isConfigured(FIREBASE_DB_URL);
-        const keyUrl = (auth) =>
-          FIREBASE_DB_URL.replace(/\/+$/, "") + "/config/geminiKey.json" + (auth ? "?auth=" + encodeURIComponent(auth) : "");
+        const fbReady = () => isConfigured(SUPABASE_URL) && isConfigured(SUPABASE_ANON_KEY);
+        const sbBase = () => SUPABASE_URL.replace(/\/+$/, "");
+        const sbHeaders = (token) => {
+          const h = { apikey: SUPABASE_ANON_KEY, "Content-Type": "application/json" };
+          if (token) h.Authorization = "Bearer " + token;
+          return h;
+        };
+        const KEY_ROW = "/rest/v1/config?key=eq.gemini";
 
         async function fetchSharedKey() {
           if (!fbReady()) return "";
           try {
-            const r = await fetch(keyUrl() + (keyUrl().includes("?") ? "&" : "?") + "t=" + Date.now(), { cache: "no-store" });
+            const r = await fetch(sbBase() + KEY_ROW + "&select=value&t=" + Date.now(), { headers: sbHeaders(), cache: "no-store" });
             if (!r.ok) return "";
-            const v = await r.json();
+            const rows = await r.json();
+            const v = rows && rows[0] && rows[0].value;
             return typeof v === "string" ? v.trim() : "";
           } catch {
             return "";
@@ -3483,46 +3489,51 @@
             e.status = status;
             return e;
           };
-          if (!fbReady()) throw bad("Setup not finished: add FIREBASE_API_KEY and FIREBASE_DB_URL at the top of index.html.", 500);
+          if (!fbReady()) throw bad("Setup not finished: add SUPABASE_URL and SUPABASE_ANON_KEY at the top of index.html.", 500);
           if (action === "login") {
             const email = String((opts.body && opts.body.id) || "").trim();
             const password = String((opts.body && opts.body.password) || "");
             let r;
             try {
-              r = await fetch("https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=" + encodeURIComponent(FIREBASE_API_KEY), {
+              r = await fetch(sbBase() + "/auth/v1/token?grant_type=password", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, password, returnSecureToken: true }),
+                headers: sbHeaders(),
+                body: JSON.stringify({ email, password }),
               });
             } catch {
               throw bad("Network error. Check your connection.", 502);
             }
             const j = await r.json().catch(() => ({}));
-            if (!r.ok || !j.idToken) throw bad("Wrong email or password.", 401);
-            return { token: j.idToken };
+            if (!r.ok || !j.access_token) throw bad("Wrong email or password.", 401);
+            return { token: j.access_token };
           }
           const token = admToken();
           if (!token) {
             admSignOut();
             throw bad("Please sign in again.", 401);
           }
+          const expired = (r) => r.status === 401 || r.status === 403;
           if (action === "key") return keyStatus(await fetchSharedKey());
           if (action === "keyset") {
             const key = String((opts.body && opts.body.key) || "").trim();
             if (key.length < 20) throw bad("That doesn't look like a Gemini API key.", 400);
             const test = await keyStatus(key);
             if (!test.connected) throw bad(test.message, 400);
-            const r = await fetch(keyUrl(token), { method: "PUT", body: JSON.stringify(key) });
-            if (r.status === 401 || r.status === 403) {
+            const r = await fetch(sbBase() + "/rest/v1/config?on_conflict=key", {
+              method: "POST",
+              headers: { ...sbHeaders(token), Prefer: "resolution=merge-duplicates,return=minimal" },
+              body: JSON.stringify({ key: "gemini", value: key }),
+            });
+            if (r.status === 401) {
               admSignOut();
               throw bad("Please sign in again.", 401);
             }
-            if (!r.ok) throw bad("Couldn't save the key (" + r.status + "). Check your Firebase rules.", 500);
+            if (!r.ok) throw bad("Couldn't save the key (" + r.status + "). Check the Supabase policies.", 500);
             return test;
           }
           if (action === "keydel") {
-            const r = await fetch(keyUrl(token), { method: "DELETE" });
-            if (r.status === 401 || r.status === 403) {
+            const r = await fetch(sbBase() + KEY_ROW, { method: "DELETE", headers: { ...sbHeaders(token), Prefer: "return=minimal" } });
+            if (r.status === 401) {
               admSignOut();
               throw bad("Please sign in again.", 401);
             }
