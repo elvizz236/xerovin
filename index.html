@@ -2008,10 +2008,10 @@
         // Google switches off any key it finds, which is what breaks the chat.
         // The Gemini key is typed into the admin panel (open xerovin.com/#admin) and stored
         // encrypted in your database by api/app.js. It is never in this file.
-        // ── EDIT THESE THREE LINES ON GITHUB (this is the only file you need) ──
-        const ADMIN_EMAIL = "elvistypeshii@gmail.com";
-        const ADMIN_PASSWORD = "Student@2023";
-        const GEMINI_API_KEY = ""; // paste your Gemini key between the quotes. Empty = AI is off for everyone.
+        // ── ONE-TIME SETUP: paste these two values from your free Firebase project (see instructions) ──
+        // They are NOT secret. Your Gemini key and admin password never go in this file.
+        const FIREBASE_API_KEY = "PASTE_FIREBASE_WEB_API_KEY";
+        const FIREBASE_DB_URL = "PASTE_FIREBASE_DATABASE_URL"; // e.g. https://xerovin-default-rtdb.firebaseio.com
         const CHAT_ENDPOINT = "gemini-direct";
         const GEMINI_MODELS = [
           { id: "gemini-3.5-flash-lite", levels: { low: "MINIMAL", medium: "MINIMAL", high: "LOW", xhigh: "MEDIUM" } },
@@ -3098,7 +3098,7 @@
         }
 
         async function callChat(body, signal) {
-          const key = String(GEMINI_API_KEY || "").trim();
+          const key = await fetchSharedKey();
           if (!key) return jsonResponse(503, "API invalid: no API key is connected. The site owner needs to add one.");
           const out = await geminiAsk(key, body, signal);
           if (out.failure) {
@@ -3450,6 +3450,32 @@
         let admRange = "week";
         let admData = null;
 
+        const fbReady = () => isConfigured(FIREBASE_API_KEY) && isConfigured(FIREBASE_DB_URL);
+        const keyUrl = (auth) =>
+          FIREBASE_DB_URL.replace(/\/+$/, "") + "/config/geminiKey.json" + (auth ? "?auth=" + encodeURIComponent(auth) : "");
+
+        async function fetchSharedKey() {
+          if (!fbReady()) return "";
+          try {
+            const r = await fetch(keyUrl() + (keyUrl().includes("?") ? "&" : "?") + "t=" + Date.now(), { cache: "no-store" });
+            if (!r.ok) return "";
+            const v = await r.json();
+            return typeof v === "string" ? v.trim() : "";
+          } catch {
+            return "";
+          }
+        }
+
+        const maskKey = (key) => (key.length > 10 ? key.slice(0, 4) + "…" + key.slice(-4) : "••••");
+
+        async function keyStatus(key) {
+          if (!key) return { connected: false, masked: "", message: "No API key is saved. The AI is switched off for everyone." };
+          const out = await geminiAsk(key, { depth: "low", system: "Reply with one short word.", contents: [{ role: "user", parts: [{ text: "Say OK" }] }] });
+          if (out.failure) return { connected: false, masked: maskKey(key), message: "Google refused this key: " + out.failure.message };
+          try { await out.res.text(); } catch { /* ok */ }
+          return { connected: true, masked: maskKey(key), model: out.model, message: "Connected. The AI is working for every visitor." };
+        }
+
         async function admApi(action, opts = {}) {
           const bad = (message, status, code) => {
             const e = new Error(message);
@@ -3457,27 +3483,51 @@
             e.status = status;
             return e;
           };
+          if (!fbReady()) throw bad("Setup not finished: add FIREBASE_API_KEY and FIREBASE_DB_URL at the top of index.html.", 500);
           if (action === "login") {
-            const id = String((opts.body && opts.body.id) || "").trim().toLowerCase();
-            const pw = String((opts.body && opts.body.password) || "");
-            if (id === ADMIN_EMAIL.toLowerCase() && pw === ADMIN_PASSWORD) return { token: "admin-ok" };
-            throw bad("Wrong email or password.", 401);
+            const email = String((opts.body && opts.body.id) || "").trim();
+            const password = String((opts.body && opts.body.password) || "");
+            let r;
+            try {
+              r = await fetch("https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=" + encodeURIComponent(FIREBASE_API_KEY), {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password, returnSecureToken: true }),
+              });
+            } catch {
+              throw bad("Network error. Check your connection.", 502);
+            }
+            const j = await r.json().catch(() => ({}));
+            if (!r.ok || !j.idToken) throw bad("Wrong email or password.", 401);
+            return { token: j.idToken };
           }
-          if (admToken() !== "admin-ok") {
+          const token = admToken();
+          if (!token) {
             admSignOut();
             throw bad("Please sign in again.", 401);
           }
-          if (action.startsWith("key") && action !== "key") {
-            throw bad("The key lives at the top of index.html (GEMINI_API_KEY). Edit it on GitHub and commit.", 400);
+          if (action === "key") return keyStatus(await fetchSharedKey());
+          if (action === "keyset") {
+            const key = String((opts.body && opts.body.key) || "").trim();
+            if (key.length < 20) throw bad("That doesn't look like a Gemini API key.", 400);
+            const test = await keyStatus(key);
+            if (!test.connected) throw bad(test.message, 400);
+            const r = await fetch(keyUrl(token), { method: "PUT", body: JSON.stringify(key) });
+            if (r.status === 401 || r.status === 403) {
+              admSignOut();
+              throw bad("Please sign in again.", 401);
+            }
+            if (!r.ok) throw bad("Couldn't save the key (" + r.status + "). Check your Firebase rules.", 500);
+            return test;
           }
-          if (action === "key") {
-            const key = String(GEMINI_API_KEY || "").trim();
-            if (!key) return { connected: false, masked: "", message: "No API key is set. The AI is switched off for everyone." };
-            const masked = key.length > 10 ? key.slice(0, 4) + "…" + key.slice(-4) : "••••";
-            const out = await geminiAsk(key, { depth: "low", system: "Reply with one short word.", contents: [{ role: "user", parts: [{ text: "Say OK" }] }] });
-            if (out.failure) return { connected: false, masked, message: "Google refused this key: " + out.failure.message };
-            try { await out.res.text(); } catch { /* ok */ }
-            return { connected: true, masked, model: out.model, message: "Connected. The AI is working for everyone." };
+          if (action === "keydel") {
+            const r = await fetch(keyUrl(token), { method: "DELETE" });
+            if (r.status === 401 || r.status === 403) {
+              admSignOut();
+              throw bad("Please sign in again.", 401);
+            }
+            if (!r.ok) throw bad("Couldn't remove the key (" + r.status + ").", 500);
+            return keyStatus("");
           }
           throw bad("Visitor stats need a server, which this one-file version doesn't have.", 501, "NO_STATS");
         }
@@ -3663,7 +3713,7 @@
           }
           msg.className = "adm-note" + (k.connected ? "" : " err");
           msg.textContent = (k.masked ? "Saved key: " + k.masked + (k.model ? " · model: " + k.model : "") + ". " : "") + k.message;
-          rm.classList.add("hidden");
+          rm.classList.toggle("hidden", !k.masked);
         }
 
         async function loadAdmin(withKey) {
@@ -3708,10 +3758,10 @@
               <div id="adm-setup" class="adm-banner hidden"></div>
 
               <section class="adm-card">
-                <div class="adm-card-head"><h3>AI connection</h3><span class="adm-sub">Set GEMINI_API_KEY at the top of index.html. Empty = AI off for everyone.</span></div>
+                <div class="adm-card-head"><h3>AI connection</h3><span class="adm-sub">The key you save here powers the AI for every visitor.</span></div>
                 <form id="adm-key-form" class="adm-key-row" novalidate>
-                  <input id="adm-key-input" class="field-input" type="password" autocomplete="off" spellcheck="false" placeholder="Edit GEMINI_API_KEY in index.html" disabled />
-                  <button id="adm-key-save" type="submit" class="btn-solid" style="height:40px;" disabled>Save &amp; connect</button>
+                  <input id="adm-key-input" class="field-input" type="password" autocomplete="off" spellcheck="false" placeholder="Paste your Gemini API key" />
+                  <button id="adm-key-save" type="submit" class="btn-solid" style="height:40px;">Save &amp; connect</button>
                   <span id="adm-pill" class="adm-pill adm-wait"><i></i>Checking…</span>
                 </form>
                 <p id="adm-key-msg" class="adm-note">Checking the connection…</p>
