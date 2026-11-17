@@ -3504,7 +3504,17 @@
               throw bad("Network error. Check your connection.", 502);
             }
             const j = await r.json().catch(() => ({}));
-            if (!r.ok || !j.access_token) throw bad("Wrong email or password.", 401);
+            if (!r.ok || !j.access_token) {
+              const code = String(j.error_code || j.error || "");
+              const detail = String(j.msg || j.message || j.error_description || "");
+              if (code === "email_not_confirmed" || /not confirmed/i.test(detail))
+                throw bad("This user isn't confirmed yet. In Supabase open Authentication → Users, click the user and confirm it (or delete it and re-add with Auto Confirm User ticked).", 401);
+              if (/api key|apikey/i.test(detail) || code === "no_authorization")
+                throw bad("Supabase rejected SUPABASE_ANON_KEY. Re-copy the publishable/anon key (not the secret key) into index.html.", 401);
+              if (code === "invalid_credentials" || /invalid login/i.test(detail))
+                throw bad("Supabase says the email or password doesn't match a user. Check Authentication → Users for exactly elvistypeshii@gmail.com, and reset its password to Student@2023 if unsure.", 401);
+              throw bad("Login failed (" + r.status + "): " + (detail || code || "unknown error"), 401);
+            }
             return { token: j.access_token };
           }
           const token = admToken();
