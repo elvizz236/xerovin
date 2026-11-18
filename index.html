@@ -1813,6 +1813,90 @@
         .tool-root { padding: 18px 16px 60px; }
         .tv-pbody { height: 440px; }
       }
+            .im-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-top: 14px; }
+      .im-thumb { border: 1px solid var(--border-hairline); border-radius: 12px; overflow: hidden; background: #f4f3ef; aspect-ratio: 1; cursor: pointer; padding: 0; }
+      .im-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+      .im-stage { position: relative; border: 1px solid var(--border-hairline); border-radius: 14px; background: #f4f3ef; min-height: 360px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+      .im-stage img { max-width: 100%; max-height: 640px; display: block; }
+      .im-stage .im-wait { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; background: rgba(244, 243, 239, 0.92); font-size: 13px; color: var(--ink-muted); }
+      .im-spin { width: 22px; height: 22px; border-radius: 50%; border: 2px solid #d9d6cd; border-top-color: #0a0a0a; animation: imSpin 0.8s linear infinite; }
+      @keyframes imSpin { to { transform: rotate(360deg); } }
+      .im-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+      .im-used { margin-top: 12px; font-size: 12px; color: var(--ink-muted); line-height: 1.55; }
+      
+      /* ── Credits & Upgrade ── */
+      .credit-card { margin: 0 12px 10px; padding: 12px 13px; border: 1px solid var(--border-hairline); border-radius: 13px; background: #fff; cursor: pointer; }
+      .credit-card.hidden { display: none !important; }
+      .credit-card:hover { border-color: var(--border-strong); }
+      .cc-top { display: flex; align-items: center; justify-content: space-between; font-size: 12px; font-weight: 600; }
+      .cc-top .n { font-family: var(--font-mono); font-size: 12px; color: var(--ink-secondary); font-weight: 500; }
+      .cc-bar { height: 6px; border-radius: 999px; background: #efede6; margin: 9px 0 10px; overflow: hidden; }
+      .cc-bar i { display: block; height: 100%; border-radius: inherit; background: #0a0a0a; transition: width 0.3s; }
+      .credit-card.low .cc-bar i { background: #e5484d; }
+      .cc-cta { width: 100%; height: 30px; border: none; border-radius: 8px; background: #0a0a0a; color: #faf9f6; font-size: 12px; font-weight: 600; cursor: pointer; }
+      .credit-card.pro { background: linear-gradient(135deg, #0a0a0a, #2a2823); border-color: #0a0a0a; color: #faf9f6; }
+      .credit-card.pro .cc-top .n { color: #cfcabd; }
+      .credit-card.pro .cc-bar { background: rgba(255, 255, 255, 0.18); }
+      .credit-card.pro .cc-bar i { background: #f5d77a; }
+      .credit-card.pro .cc-cta { background: rgba(255, 255, 255, 0.14); }
+      .pro-badge { display: inline-block; margin-left: 5px; padding: 1px 6px; border-radius: 5px; background: linear-gradient(135deg, #f5d77a, #e8b84a); color: #3a2a00; font-size: 9.5px; font-weight: 800; letter-spacing: 0.06em; vertical-align: 1px; }
+      .up-hero { text-align: center; padding: 18px 0 8px; }
+      .up-eyebrow { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.14em; color: #8a6d12; background: #fbf1cf; padding: 5px 12px; border-radius: 999px; }
+      .up-hero h1 { margin: 16px 0 10px; font-family: var(--font-display); font-size: clamp(30px, 5vw, 46px); letter-spacing: -0.025em; line-height: 1.08; }
+      .up-hero p { margin: 0 auto; max-width: 560px; font-size: 15px; color: var(--ink-muted); line-height: 1.6; }
+      .up-status { max-width: 760px; margin: 22px auto 0; padding: 14px 18px; border-radius: 14px; background: #e9f7ee; border: 1px solid #c4e8d0; color: #16663a; font-size: 13.5px; display: flex; align-items: center; gap: 10px; justify-content: center; text-align: center; flex-wrap: wrap; }
+      .up-plans { display: grid; grid-template-columns: 1fr 1.08fr; gap: 18px; max-width: 820px; margin: 30px auto 0; align-items: stretch; }
+      .up-plan { border-radius: 22px; padding: 26px; border: 1px solid var(--border-hairline); background: #fff; display: flex; flex-direction: column; }
+      .up-plan h3 { margin: 0; font-size: 15px; font-family: var(--font-display); }
+      .up-price { margin: 12px 0 4px; font-family: var(--font-display); font-size: 44px; font-weight: 700; letter-spacing: -0.03em; }
+      .up-price small { font-size: 14px; font-weight: 500; color: var(--ink-muted); letter-spacing: 0; }
+      .up-sub { font-size: 12.5px; color: var(--ink-muted); margin: 0 0 18px; }
+      .up-list { list-style: none; padding: 0; margin: 0 0 22px; display: grid; gap: 11px; font-size: 13.5px; line-height: 1.45; }
+      .up-list li { display: flex; gap: 10px; align-items: flex-start; }
+      .up-list svg { flex-shrink: 0; margin-top: 2px; }
+      .up-plan.pro { background: radial-gradient(120% 90% at 100% 0%, #3b3526 0%, #0a0a0a 55%); color: #faf9f6; border-color: #0a0a0a; box-shadow: 0 24px 60px rgba(10, 10, 10, 0.28); position: relative; }
+      .up-plan.pro .up-price small, .up-plan.pro .up-sub { color: #cfcabd; }
+      .up-ribbon { position: absolute; top: 18px; right: 18px; font-size: 10.5px; font-weight: 800; letter-spacing: 0.08em; padding: 4px 10px; border-radius: 999px; background: linear-gradient(135deg, #f5d77a, #e8b84a); color: #3a2a00; }
+      .up-pay { height: 50px; border: none; border-radius: 14px; background: linear-gradient(135deg, #f5d77a, #e8b84a); color: #2b2000; font-size: 15px; font-weight: 700; cursor: pointer; margin-top: auto; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 8px 24px rgba(232, 184, 74, 0.35); transition: transform 0.12s; }
+      .up-pay:hover { transform: translateY(-1px); }
+      .up-free-btn { height: 50px; border-radius: 14px; border: 1px solid var(--border-strong); background: #fdfcf9; font-size: 14px; font-weight: 600; margin-top: auto; display: flex; align-items: center; justify-content: center; color: var(--ink-muted); }
+      .up-steps { max-width: 820px; margin: 26px auto 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+      .up-step { background: #fff; border: 1px solid var(--border-hairline); border-radius: 16px; padding: 16px; font-size: 13px; color: var(--ink-muted); line-height: 1.5; }
+      .up-step b { display: block; color: var(--ink-primary); font-size: 13.5px; margin: 8px 0 3px; }
+      .up-num { width: 26px; height: 26px; border-radius: 50%; background: #0a0a0a; color: #faf9f6; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
+      .up-unlock { max-width: 820px; margin: 18px auto 0; background: #fff; border: 1px solid var(--border-hairline); border-radius: 18px; padding: 20px; }
+      .up-unlock h4 { margin: 0 0 4px; font-size: 15px; font-family: var(--font-display); }
+      .up-unlock p { margin: 0 0 12px; font-size: 12.5px; color: var(--ink-muted); line-height: 1.5; }
+      .up-msg { margin-top: 10px; font-size: 13px; line-height: 1.5; }
+      .up-msg.ok { color: #16663a; } .up-msg.bad { color: #b42318; }
+      .up-faq { max-width: 820px; margin: 22px auto 0; display: grid; gap: 10px; }
+      .up-faq details { background: #fff; border: 1px solid var(--border-hairline); border-radius: 14px; padding: 14px 16px; font-size: 13px; color: var(--ink-muted); line-height: 1.55; }
+      .up-faq summary { cursor: pointer; font-weight: 600; color: var(--ink-primary); font-size: 13.5px; }
+      @media (max-width: 760px) { .up-plans, .up-steps { grid-template-columns: 1fr; } }
+      .side-tool.side-upgrade { position: relative; overflow: hidden; margin-top: 10px; height: auto; padding: 11px 12px; gap: 11px; border-radius: 14px; background: radial-gradient(120% 140% at 100% 0%, #4a4129 0%, #0a0a0a 60%); color: #faf9f6; box-shadow: 0 8px 22px rgba(10, 10, 10, 0.22), inset 0 0 0 1px rgba(245, 215, 122, 0.28); transition: transform 0.15s, box-shadow 0.15s; }
+      .side-tool.side-upgrade:hover { background: radial-gradient(120% 140% at 100% 0%, #5a4e2f 0%, #0a0a0a 60%); transform: translateY(-1px); box-shadow: 0 12px 28px rgba(10, 10, 10, 0.28), inset 0 0 0 1px rgba(245, 215, 122, 0.5); }
+      .side-tool.side-upgrade.on { background: radial-gradient(120% 140% at 100% 0%, #5a4e2f 0%, #0a0a0a 60%); box-shadow: 0 0 0 2px #f5d77a, 0 8px 22px rgba(10, 10, 10, 0.25); }
+      .side-tool.side-upgrade::after { content: ""; position: absolute; top: 0; left: -60%; width: 40%; height: 100%; background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.22), transparent); transform: skewX(-18deg); animation: suShine 4.5s ease-in-out infinite; pointer-events: none; }
+      @keyframes suShine { 0%, 60% { left: -60%; } 100% { left: 130%; } }
+      .side-upgrade .su-ic { width: 32px; height: 32px; border-radius: 10px; background: linear-gradient(135deg, #f5d77a, #e8b84a); color: #3a2a00; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+      .side-upgrade .su-ic svg { color: #3a2a00; }
+      .side-upgrade .su-txt { flex: 1; min-width: 0; display: flex; flex-direction: column; line-height: 1.25; }
+      .side-upgrade .su-txt b { font-size: 13.5px; font-weight: 700; }
+      .side-upgrade .su-txt small { font-size: 11px; color: #d8d1b8; font-weight: 500; }
+      .side-upgrade .su-arrow { font-size: 20px; color: #f5d77a; line-height: 1; }
+      @media (prefers-reduced-motion: reduce) { .side-tool.side-upgrade::after { animation: none; } }
+      .pref-size-s .assistant-prose { font-size: 13.5px; }
+      .pref-size-l .assistant-prose { font-size: 17px; }
+      .st-card { background: #fff; border: 1px solid var(--border-hairline); border-radius: 16px; padding: 6px 18px; margin-bottom: 14px; }
+      .st-card h3 { margin: 14px 0 2px; font-size: 14px; font-family: var(--font-display); }
+      .st-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 13px 0; border-top: 1px solid var(--border-hairline); }
+      .st-row:first-of-type { border-top: none; }
+      .st-row b { display: block; font-size: 13.5px; font-weight: 600; }
+      .st-row .d { display: block; font-size: 12px; color: var(--ink-muted); margin-top: 2px; line-height: 1.45; }
+      .st-row .tv-field { width: auto; min-width: 160px; }
+      .st-btn { height: 34px; padding: 0 14px; border-radius: 9px; border: 1px solid var(--border-strong); background: #fff; font-size: 12.5px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+      .st-btn.danger { color: #b42318; border-color: #f0c8c4; }
+      .st-btn.solid { background: #0a0a0a; color: #faf9f6; border-color: #0a0a0a; }
     </style>
   </head>
   <body>
@@ -1874,16 +1958,20 @@
           <button type="button" class="side-tool" data-tool="plugins"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22v-5"/><path d="M9 8V2"/><path d="M15 8V2"/><path d="M18 8v5a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V8Z"/></svg><span>Plugins</span><span id="plug-count" class="side-badge soon hidden"></span></button>
           <button type="button" class="side-tool" data-tool="scheduled"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2"/><path d="M5 3 2 6"/><path d="m22 6-3-3"/></svg><span>Scheduled</span><span id="sched-count" class="side-badge soon hidden"></span></button>
           <button type="button" class="side-tool" data-tool="inspiration"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg><span>Inspiration</span></button>
+          <button type="button" class="side-tool" data-tool="images"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/></svg><span>Images</span><span class="side-badge">New</span></button>
           <button type="button" class="side-tool" data-tool="3d"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg><span>3D Make</span><span class="side-badge">New</span></button>
           <button type="button" class="side-tool" data-tool="slides"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h20"/><path d="M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3"/><path d="m7 21 5-5 5 5"/></svg><span>Slides</span></button>
           <button type="button" class="side-tool" data-tool="research"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/><path d="M8 11h6"/><path d="M11 8v6"/></svg><span>Deep Research</span></button>
           <button type="button" class="side-tool" data-tool="build"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 12-8.4 8.4a1.4 1.4 0 0 1-3-3L12 9"/><path d="m18 15 4-4"/><path d="m17.6 5.6 2.8 2.8"/><path d="M14 4l6 6"/></svg><span>Build</span></button>
+          <button type="button" class="side-tool" data-tool="settings"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></svg><span>Settings</span></button>
+          <button type="button" class="side-tool side-upgrade" data-tool="upgrade"><span class="su-ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9Z"/><path d="M19 3v4M17 5h4"/></svg></span><span class="su-txt"><b>Upgrade to Pro</b><small>5 credits a day · $1/week</small></span><span class="su-arrow">›</span></button>
         </nav>
         <div class="side-sep"></div>
 
         <div id="thread-list-container" class="thread-list-scroll"></div>
 
-        <div id="sidebar-footer" class="sidebar-footer"></div>
+        <div id="credit-card" class="credit-card hidden"></div>
+          <div id="sidebar-footer" class="sidebar-footer"></div>
       </aside>
 
       <!-- Main Chat Column -->
@@ -2172,8 +2260,8 @@
         // in your Supabase database. Removing it there disconnects the AI for everyone.
         // ── ONE-TIME SETUP: paste these two values from your free Supabase project (see instructions) ──
         // They are NOT secret. Your Gemini key and admin password never go in this file.
-        const SUPABASE_URL = "https://mvdhltrgvojqbvmdtite.supabase.co"; // e.g. https://abcdxyz.supabase.co
-        const SUPABASE_ANON_KEY = "sb_publishable_bRu8KK7EQKF4suRy2WhFVQ_WBE8YqNL";
+        const SUPABASE_URL = "PASTE_SUPABASE_PROJECT_URL"; // e.g. https://abcdxyz.supabase.co
+        const SUPABASE_ANON_KEY = "PASTE_SUPABASE_ANON_OR_PUBLISHABLE_KEY";
         const CHAT_ENDPOINT = "gemini-direct";
         const GEMINI_MODELS = [
           { id: "gemini-3.5-flash-lite", levels: { low: "MINIMAL", medium: "MINIMAL", high: "LOW", xhigh: "MEDIUM" } },
@@ -2508,7 +2596,7 @@
                 <div class="user-dock-info">
                   <div class="user-avatar">${escapeHtml(initials || "U")}</div>
                   <div class="user-meta">
-                    <p class="user-name">${escapeHtml(state.user.name)}</p>
+                    <p class="user-name">${escapeHtml(state.user.name)}${crIsPro() ? '<span class="pro-badge">PRO</span>' : ""}</p>
                     <p class="user-email">${escapeHtml(state.user.email)}</p>
                   </div>
                 </div>
@@ -2674,8 +2762,8 @@
                   const fullKey = `${msg.id}-full`;
                   const copiedFull = state.copiedKey === fullKey;
                   const telemetryParts = [];
-                  if (msg.firstTokenMs !== undefined) telemetryParts.push(`TTFT ${msg.firstTokenMs} ms`);
-                  if (msg.totalMs !== undefined) telemetryParts.push(`Total ${msg.totalMs} ms`);
+                  if (prefs.timing && msg.firstTokenMs !== undefined) telemetryParts.push(`TTFT ${msg.firstTokenMs} ms`);
+                  if (prefs.timing && msg.totalMs !== undefined) telemetryParts.push(`Total ${msg.totalMs} ms`);
                   footerHtml = `
                     <div class="assistant-footer">
                       <div class="font-mono tabular-nums">${escapeHtml(telemetryParts.join(" · "))}</div>
@@ -3112,6 +3200,8 @@
           }
           state.activeThreadId = null;
           state.messages = [];
+          state.mode = prefs.mode;
+          state.depth = prefs.depth;
           state.mobileSidebarOpen = false;
           setErrorBanner(null);
           renderAll();
@@ -3559,6 +3649,10 @@ document.querySelectorAll("[data-tool]").forEach((btn) => {
           const closed = ((last.content || "").match(/```/g) || []).length % 2 === 0;
           const doneBlock = closed || finished;
           if (!pv.open) {
+            if (!prefs.autoPreview) {
+              if (finished) pv.liveId = null;
+              return;
+            }
             pv.open = true;
             pv.tab = "code";
           }
@@ -3703,7 +3797,7 @@ const fmtWhen = (t) => new Date(t).toLocaleString([], { dateStyle: "medium", tim
         window.addEventListener("load", () => { paintCounts(); setTimeout(runDueTask, 3500); });
 
         // ── SUB-SECTION PAGES ──────────────────────────────────────────
-        const VIEWS = ["inspiration", "3d", "slides", "research", "build", "plugins", "scheduled"];
+        const VIEWS = ["upgrade", "inspiration", "images", "3d", "slides", "research", "build", "plugins", "scheduled", "settings"];
         const TOOLS = {
           inspiration: {
             title: "Inspiration", html: false,
@@ -3767,12 +3861,15 @@ const fmtWhen = (t) => new Date(t).toLocaleString([], { dateStyle: "medium", tim
           document.querySelector(".app-shell").classList.add("tool-mode");
           $("tool-view").classList.remove("hidden");
           document.querySelectorAll("[data-tool]").forEach((b) => b.classList.toggle("on", b.getAttribute("data-tool") === k));
-          const names = { plugins: "Plugins", scheduled: "Scheduled" };
+          const names = { plugins: "Plugins", scheduled: "Scheduled", settings: "Settings", images: "Images", upgrade: "Upgrade" };
           els.topbarTitle.textContent = names[k] || TOOLS[k].title;
           const root = $("tool-root");
           if (tv.ctrl && tv.tool !== k) { tv.ctrl.abort(); }
           if (k === "plugins") renderPluginsPage(root);
           else if (k === "scheduled") renderScheduledPage(root);
+          else if (k === "settings") renderSettingsPage(root);
+          else if (k === "images") renderImagesPage(root);
+          else if (k === "upgrade") renderUpgradePage(root);
           else renderToolPage(root, k);
           $("tool-view").scrollTop = 0;
         }
@@ -3869,6 +3966,7 @@ const fmtWhen = (t) => new Date(t).toLocaleString([], { dateStyle: "medium", tim
         async function tvRun(userText, title) {
           if (tv.busy) return;
           if (!state.user || !state.token) { openAuthModal("register", "Create a free account or sign in to use this tool."); return; }
+          if (!hasCredit()) { creditWall(); return; }
           const k = tv.tool;
           tv.contents.push({ role: "user", parts: [{ text: userText }] });
           tv.busy = true; tv.text = ""; tv.docKey = ""; tv.tab = "code";
@@ -3890,6 +3988,7 @@ const fmtWhen = (t) => new Date(t).toLocaleString([], { dateStyle: "medium", tim
               if (!raf) raf = requestAnimationFrame(() => { raf = 0; if (tv.tool === k) tvPaintOut(false); });
             }, ctrl.signal);
             if (!tv.text) throw new Error("The AI returned an empty response. Please try again.");
+            spendCredit();
             tv.contents.push({ role: "model", parts: [{ text: tv.text }] });
             let list = tvLoad(k);
             if (title) {
@@ -4116,6 +4215,326 @@ const fmtWhen = (t) => new Date(t).toLocaleString([], { dateStyle: "medium", tim
         window.addEventListener("load", () => { paintEngine(); routeView(); });
         setTimeout(() => { paintEngine(); routeView(); }, 700);
 
+        // ── SETTINGS (preferences only; no API or connector options here) ──
+        const PREFS_KEY = "xerovin_prefs";
+        const prefs = Object.assign({ mode: "chat", depth: "medium", size: "m", autoPreview: true, timing: true }, (() => { try { return JSON.parse(localStorage.getItem(PREFS_KEY) || "{}"); } catch { return {}; } })());
+        const savePrefs = () => { try { localStorage.setItem(PREFS_KEY, JSON.stringify(prefs)); } catch { /* ignore */ } };
+        function applyPrefs() {
+          document.body.classList.toggle("pref-size-s", prefs.size === "s");
+          document.body.classList.toggle("pref-size-l", prefs.size === "l");
+        }
+        state.mode = prefs.mode;
+        state.depth = prefs.depth;
+        applyPrefs();
+
+        function renderSettingsPage(root) {
+          const sel = (id, opts, val) => '<select id="' + id + '" class="tv-field">' + opts.map(([v, l]) => '<option value="' + v + '"' + (v === val ? " selected" : "") + ">" + l + "</option>").join("") + "</select>";
+          const sw = (id, on) => '<span class="xv-switch"><input type="checkbox" id="' + id + '"' + (on ? " checked" : "") + "><i></i></span>";
+          const u = state.user;
+          root.innerHTML = pageHead("Settings", "Make XEROVIN work the way you like. These settings are saved on this device.") +
+            '<div style="max-width:760px">' +
+            '<div class="st-card"><h3>Profile</h3>' + (u
+              ? '<div class="st-row"><div><b>Name</b><span class="d">Shown in the sidebar and your greeting.</span></div><div style="display:flex;gap:8px"><input id="st-name" class="tv-field" value="' + escapeHtml(u.name) + '" maxlength="40"><button type="button" class="st-btn solid" id="st-name-save">Save</button></div></div>' +
+                '<div class="st-row"><div><b>Email</b><span class="d">' + escapeHtml(u.email) + "</span></div></div>"
+              : '<div class="st-row"><div><b>You are not signed in</b><span class="d">Sign in to edit your profile and keep your chats.</span></div><button type="button" class="st-btn solid" id="st-signin">Sign in</button></div>') + "</div>" +
+            '<div class="st-card"><h3>Chat</h3>' +
+              '<div class="st-row"><div><b>Default mode</b><span class="d">Used when you start a new chat.</span></div>' + sel("st-mode", [["chat", "General"], ["architect", "Architect"], ["reason", "Deep Reason"], ["synthesize", "Synthesize"]], prefs.mode) + "</div>" +
+              '<div class="st-row"><div><b>Default depth</b><span class="d">Lower is faster. Higher thinks longer before answering.</span></div>' + sel("st-depth", [["low", "Low"], ["medium", "Balanced"], ["high", "Deep"], ["xhigh", "Max"]], prefs.depth) + "</div>" +
+              '<div class="st-row"><div><b>Text size</b><span class="d">Size of the AI\'s answers.</span></div>' + sel("st-size", [["s", "Small"], ["m", "Normal"], ["l", "Large"]], prefs.size) + "</div>" +
+              '<div class="st-row"><div><b>Open preview automatically</b><span class="d">Slide the preview panel open when the AI writes code.</span></div>' + sw("st-auto", prefs.autoPreview) + "</div>" +
+              '<div class="st-row"><div><b>Show response timing</b><span class="d">Shows how fast each answer started and finished.</span></div>' + sw("st-timing", prefs.timing) + "</div></div>" +
+            '<div class="st-card"><h3>Data on this device</h3>' +
+              '<div class="st-row"><div><b>Export my chats</b><span class="d">Download your conversations as a file.</span></div><button type="button" class="st-btn" id="st-export">Export</button></div>' +
+              '<div class="st-row"><div><b>Clear chat history</b><span class="d">Deletes all your saved conversations.</span></div><button type="button" class="st-btn danger" id="st-clear-chats">Clear</button></div>' +
+              '<div class="st-row"><div><b>Clear tool history</b><span class="d">Removes recent results from Slides, Build, 3D Make and the others, and your scheduled tasks.</span></div><button type="button" class="st-btn danger" id="st-clear-tools">Clear</button></div></div>' +
+            (u ? '<div class="st-card"><h3>Account</h3><div class="st-row"><div><b>Sign out</b><span class="d">You can sign back in any time.</span></div><button type="button" class="st-btn" id="st-logout">Sign out</button></div></div>' : "") +
+            '<p class="xv-note">XEROVIN runs from a single index.html. Nothing here changes how the AI is connected.</p></div>';
+          bindBack();
+          const on = (id, ev, fn) => { const el = $(id); if (el) el.addEventListener(ev, fn); };
+          on("st-signin", "click", () => openAuthModal("register", "Create a free account or sign in."));
+          on("st-name-save", "click", () => {
+            const name = ($("st-name").value || "").trim();
+            if (!name) return showToast("Enter a name.");
+            state.user.name = name;
+            try {
+              const users = getLocalUsers();
+              const me = users.find((x) => x.id === state.user.id);
+              if (me) { me.name = name; localStorage.setItem(LOCAL_USERS_KEY, JSON.stringify(users)); }
+            } catch { /* ignore */ }
+            renderSidebar(); renderComposer();
+            showToast("Name updated");
+          });
+          on("st-mode", "change", (e) => { prefs.mode = e.target.value; savePrefs(); if (!state.messages.length) state.mode = prefs.mode; showToast("Saved"); });
+          on("st-depth", "change", (e) => { prefs.depth = e.target.value; savePrefs(); if (!state.messages.length) state.depth = prefs.depth; showToast("Saved"); });
+          on("st-size", "change", (e) => { prefs.size = e.target.value; savePrefs(); applyPrefs(); showToast("Saved"); });
+          on("st-auto", "change", (e) => { prefs.autoPreview = e.target.checked; savePrefs(); });
+          on("st-timing", "change", (e) => { prefs.timing = e.target.checked; savePrefs(); renderMessages(); });
+          on("st-export", "click", () => {
+            if (!u) return showToast("Sign in to export your chats.");
+            const blob = new Blob([JSON.stringify(state.threads, null, 2)], { type: "application/json" });
+            const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "xerovin-chats.json";
+            document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+          });
+          on("st-clear-chats", "click", () => {
+            if (!u) return showToast("Nothing to clear.");
+            if (!confirm("Delete all your saved conversations? This cannot be undone.")) return;
+            if (state.isStreaming && state.abortController) state.abortController.abort();
+            state.threads = []; state.activeThreadId = null; state.messages = []; state.isStreaming = false;
+            saveLocalThreads(u.id); renderAll(); showToast("Chat history cleared");
+          });
+          on("st-clear-tools", "click", () => {
+            if (!confirm("Clear recent tool results and scheduled tasks on this device?")) return;
+            try {
+              const uid = state.user ? state.user.id : "guest";
+              ["inspiration", "3d", "slides", "research", "build"].forEach((k) => localStorage.removeItem("xerovin_tv_" + k + "_" + uid));
+              localStorage.removeItem("xerovin_scheduled_" + uid);
+            } catch { /* ignore */ }
+            paintCounts(); showToast("Tool history cleared");
+          });
+          on("st-logout", "click", () => { handleLogout(); renderSettingsPage(root); });
+        }
+
+        // ── IMAGES (free, no key: Pollinations) ─────────────────────────
+        const IM_STYLES = {
+          "None": "",
+          "Photo": "ultra realistic photograph, natural light, sharp focus",
+          "Digital art": "polished digital illustration, rich detail",
+          "Anime": "anime style illustration, clean lines, vibrant colors",
+          "3D render": "high quality 3D render, soft studio lighting",
+          "Watercolor": "delicate watercolor painting, soft edges",
+          "Pixel art": "retro pixel art, 16-bit style",
+          "Minimal logo": "minimal vector logo design, flat colors, white background",
+        };
+        const IM_SHAPES = { "Square": [1024, 1024], "Wide": [1344, 768], "Tall": [768, 1344] };
+        const im = { items: [], cur: -1, busy: false };
+        const imKey = () => "xerovin_im_" + (state.user ? state.user.id : "guest");
+        const imLoad = () => { try { return JSON.parse(localStorage.getItem(imKey()) || "[]"); } catch { return []; } };
+        const imSave = (a) => { try { localStorage.setItem(imKey(), JSON.stringify(a.slice(0, 8))); } catch { /* ignore */ } };
+
+        function imUrl(prompt, shape, seed) {
+          const [w, h] = IM_SHAPES[shape] || IM_SHAPES.Square;
+          return "https://image.pollinations.ai/prompt/" + encodeURIComponent(prompt) + "?width=" + w + "&height=" + h + "&seed=" + seed + "&nologo=true&model=flux";
+        }
+
+        async function imImprove(text) {
+          try {
+            const res = await callChat({
+              depth: "low",
+              system: "You write prompts for an AI image generator. Rewrite the user's idea as ONE vivid English paragraph (max 70 words) describing subject, setting, lighting, composition and mood. Output only the prompt, no quotes, no preamble.",
+              contents: [{ role: "user", parts: [{ text }] }],
+            });
+            if (!res.ok) return text;
+            let out = "";
+            await readGeminiSSE(res, (t) => { out += t; });
+            out = out.trim().replace(/^["']|["']$/g, "");
+            return out.length > 8 ? out : text;
+          } catch { return text; }
+        }
+
+        function renderImagesPage(root) {
+          const opts = (o, d) => Object.keys(o).map((k) => '<option value="' + k + '"' + (k === d ? " selected" : "") + ">" + k + "</option>").join("");
+          root.innerHTML = pageHead("Images", "Describe a picture and get it in seconds. Free to use, powered by Pollinations.") +
+            '<div class="tv-grid"><div class="tv-card"><label class="tv-label" for="im-prompt">What should the picture show?</label>' +
+            '<textarea id="im-prompt" class="tv-field" placeholder="e.g. a cozy coffee shop in Lagos at golden hour"></textarea>' +
+            '<div class="tv-chips">' + ["A lion wearing a crown, studio portrait", "A futuristic city at sunset", "Logo for a coffee brand called Ember"].map((x, i) => '<button type="button" class="tv-chip" data-iex="' + i + '">' + x + "</button>").join("") + "</div>" +
+            '<label class="tv-label" for="im-style">Style</label><select id="im-style" class="tv-field">' + opts(IM_STYLES, "None") + "</select>" +
+            '<label class="tv-label" for="im-shape">Shape</label><select id="im-shape" class="tv-field">' + opts(IM_SHAPES, "Square") + "</select>" +
+            '<label class="tv-label" style="display:flex;align-items:center;gap:8px;"><input type="checkbox" id="im-improve" checked> Let the AI improve my prompt first</label>' +
+            '<button type="button" id="im-go" class="tv-go">Generate image</button><div id="im-recent" class="tv-recent"></div></div>' +
+            '<div class="tv-card tv-out"><div id="im-err"></div><div id="im-stage" class="im-stage"><div class="tv-empty">Your image will appear here.</div></div><div id="im-meta"></div><div id="im-gal"></div></div></div>';
+          bindBack();
+          const ex = ["A lion wearing a crown, studio portrait", "A futuristic city at sunset", "Logo for a coffee brand called Ember"];
+          root.querySelectorAll("[data-iex]").forEach((b) => b.addEventListener("click", () => { $("im-prompt").value = ex[Number(b.getAttribute("data-iex"))]; $("im-prompt").focus(); }));
+          $("im-go").addEventListener("click", () => imGenerate(false));
+          $("im-prompt").addEventListener("keydown", (e) => { if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) imGenerate(false); });
+          const rec = imLoad();
+          im.items = rec.slice();
+          imDrawRecent(); imDrawGallery();
+          if (im.cur >= 0 && im.items[im.cur]) imShow(im.cur);
+        }
+
+        function imDrawRecent() {
+          const box = $("im-recent"); if (!box) return;
+          if (!im.items.length) { box.innerHTML = ""; return; }
+          box.innerHTML = "<b>Recent</b>" + im.items.map((h, i) => '<button type="button" data-ir="' + i + '" title="' + escapeHtml(h.prompt) + '">' + escapeHtml(h.prompt) + "</button>").join("");
+          box.querySelectorAll("[data-ir]").forEach((b) => b.addEventListener("click", () => imShow(Number(b.getAttribute("data-ir")))));
+        }
+        function imDrawGallery() {
+          const g = $("im-gal"); if (!g) return;
+          g.innerHTML = im.items.length > 1 ? '<div class="im-grid">' + im.items.map((h, i) => '<button type="button" class="im-thumb" data-ig="' + i + '"><img src="' + escapeHtml(h.url) + '" alt="" loading="lazy" referrerpolicy="no-referrer"></button>').join("") + "</div>" : "";
+          g.querySelectorAll("[data-ig]").forEach((b) => b.addEventListener("click", () => imShow(Number(b.getAttribute("data-ig")))));
+        }
+
+        function imShow(i) {
+          const h = im.items[i]; if (!h) return;
+          im.cur = i;
+          const stage = $("im-stage"); if (!stage) return;
+          stage.innerHTML = '<img id="im-img" alt="" referrerpolicy="no-referrer" src="' + escapeHtml(h.url) + '"><div class="im-wait" id="im-wait"><div class="im-spin"></div>Painting your image…</div>';
+          const img = $("im-img");
+          const done = () => { const w = $("im-wait"); if (w) w.remove(); };
+          img.addEventListener("load", done);
+          img.addEventListener("error", () => { stage.innerHTML = '<div class="tv-empty">The image service didn\'t respond. Try again in a moment.</div>'; imErr("The free image service is busy or offline. Press Generate to try again."); });
+          if (img.complete && img.naturalWidth) done();
+          $("im-meta").innerHTML = '<div class="im-actions"><button type="button" class="st-btn solid" id="im-again">Make another</button><button type="button" class="st-btn" id="im-dl">Download</button><button type="button" class="st-btn" id="im-open">Open full size</button></div><p class="im-used"><b>Prompt used:</b> ' + escapeHtml(h.prompt) + "</p>";
+          $("im-again").addEventListener("click", () => imGenerate(true));
+          $("im-open").addEventListener("click", () => window.open(h.url, "_blank", "noopener"));
+          $("im-dl").addEventListener("click", async () => {
+            try {
+              const r = await fetch(h.url); if (!r.ok) throw new Error("x");
+              const blob = await r.blob();
+              const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "xerovin-image.jpg";
+              document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+            } catch { window.open(h.url, "_blank", "noopener"); showToast("Opened in a new tab. Right-click to save."); }
+          });
+        }
+        function imErr(msg) { const e = $("im-err"); if (e) e.innerHTML = msg ? '<div class="tv-err">' + escapeHtml(msg) + "</div>" : ""; }
+
+        async function imGenerate(again) {
+          if (im.busy) return;
+          if (!state.user || !state.token) { openAuthModal("register", "Create a free account or sign in to make images."); return; }
+          const raw = ($("im-prompt").value || "").trim() || (again && im.items[im.cur] ? im.items[im.cur].raw : "");
+          if (!raw) { showToast("Describe the picture first."); return; }
+          if (!hasCredit()) { creditWall(); return; }
+          im.busy = true; imErr("");
+          const btn = $("im-go"); btn.disabled = true; btn.textContent = "Working…";
+          $("im-stage").innerHTML = '<div class="im-wait" style="position:static;background:none"><div class="im-spin"></div>Preparing your prompt…</div>';
+          try {
+            let prompt = raw;
+            const typed = ($("im-prompt").value || "").trim();
+            const cur = im.items[im.cur];
+            const reuse = again && cur && (!typed || typed === cur.raw);
+            if (reuse) prompt = cur.base || raw;
+            else if ($("im-improve").checked) prompt = await imImprove(raw);
+            const style = IM_STYLES[$("im-style").value] || "";
+            const full = style ? prompt + ", " + style : prompt;
+            const url = imUrl(full, $("im-shape").value, Math.floor(Math.random() * 1e9));
+            spendCredit();
+            im.items.unshift({ prompt: full, base: prompt, raw, url, ts: Date.now() });
+            im.items = im.items.slice(0, 8);
+            imSave(im.items);
+            imDrawRecent(); imDrawGallery(); imShow(0);
+          } finally {
+            im.busy = false; btn.disabled = false; btn.textContent = "Generate image";
+          }
+        }
+
+        // ── CREDITS, PRO & UPGRADE ──────────────────────────────────────
+        const PAYPAL_LINK = "https://www.paypal.com/ncp/payment/A6CL8GXSTHA7C";
+        const FREE_DAILY = 20; // tenths of a credit (2.0 credits)
+        const PRO_DAILY = 50; // tenths of a credit (5.0 credits)
+        const PRO_DAYS = 7;
+        const MSG_COST = 1; // 0.10 credit
+
+        const normTxn = (v) => String(v || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+        async function sha256Hex(str) {
+          const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+          return Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, "0")).join("");
+        }
+        const todayStr = () => { const d = new Date(); return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate(); };
+        const crKey = () => "xerovin_credits_" + (state.user ? state.user.id : "guest");
+        function crState() {
+          let st = {};
+          try { st = JSON.parse(localStorage.getItem(crKey()) || "{}"); } catch { st = {}; }
+          if (st.day !== todayStr()) { st.day = todayStr(); st.used = 0; }
+          st.used = st.used || 0; st.proUntil = st.proUntil || 0; st.hashes = st.hashes || [];
+          return st;
+        }
+        const crSave = (st) => { try { localStorage.setItem(crKey(), JSON.stringify(st)); } catch { /* ignore */ } };
+        function crIsPro() { return !!state.user && crState().proUntil > Date.now(); }
+        const crDaily = () => (crIsPro() ? PRO_DAILY : FREE_DAILY);
+        const crLeft = () => Math.max(0, crDaily() - crState().used);
+        const fmtC = (t) => (t / 10).toFixed(1);
+        const hasCredit = () => crLeft() >= MSG_COST;
+        function spendCredit() {
+          const st = crState(); st.used += MSG_COST; crSave(st); paintCredits();
+        }
+        function creditWall() {
+          showToast(crIsPro() ? "You've used today's Pro credits. They reset tomorrow." : "You're out of credits for today. Upgrade for 5 daily credits.");
+          if (location.hash !== "#upgrade") location.hash = "#upgrade";
+        }
+        let lastProState = null;
+        function paintCredits() {
+          const card = $("credit-card"); if (!card) return;
+          if (!state.user) { card.classList.add("hidden"); return; }
+          const pro = crIsPro(), left = crLeft(), daily = crDaily(), st = crState();
+          card.classList.remove("hidden");
+          card.classList.toggle("pro", pro);
+          card.classList.toggle("low", !pro && left <= 4);
+          const days = Math.max(1, Math.ceil((st.proUntil - Date.now()) / 86400000));
+          card.innerHTML = '<div class="cc-top"><span>' + (pro ? "PRO · " + days + (days === 1 ? " day left" : " days left") : "Daily credits") + '</span><span class="n">' + fmtC(left) + " / " + fmtC(daily) + '</span></div><div class="cc-bar"><i style="width:' + Math.round((left / daily) * 100) + '%"></i></div>' +
+            '<button type="button" class="cc-cta">' + (pro ? "Manage Pro" : "Upgrade for 5 credits a day") + "</button>";
+          if (lastProState !== pro) { lastProState = pro; renderSidebar(); }
+        }
+        document.addEventListener("click", (e) => { if (e.target.closest("#credit-card")) location.hash = "#upgrade"; });
+        setInterval(paintCredits, 30000);
+        window.addEventListener("load", () => setTimeout(paintCredits, 400));
+        setTimeout(paintCredits, 900);
+
+        async function activatePro(txnRaw) {
+          const txn = normTxn(txnRaw);
+          if (txn.length < 8) return { ok: false, msg: "Paste the full Transaction ID from your PayPal receipt." };
+          if (!state.user) return { ok: false, msg: "Sign in first, then unlock Pro on your account." };
+          if (!fbReady()) return { ok: false, msg: "Payments aren't set up yet. Please try again later." };
+          const hash = await sha256Hex(txn);
+          const st = crState();
+          if (st.hashes.includes(hash)) return { ok: false, msg: "This payment has already been used on this account." };
+          let rows;
+          try {
+            const r = await fetch(sbBase() + "/rest/v1/config?key=eq.paid_" + hash + "&select=value", { headers: sbHeaders(), cache: "no-store" });
+            if (!r.ok) throw new Error("x");
+            rows = await r.json();
+          } catch { return { ok: false, msg: "Couldn't reach the payment check. Check your connection and try again." }; }
+          if (!rows || !rows.length) return { ok: false, msg: "This payment hasn't been confirmed yet. Confirmations are done by hand, so try again in a little while. Your credits unlock the moment it's confirmed." };
+          const approvedAt = Number(rows[0].value) || 0;
+          if (approvedAt && Date.now() - approvedAt > 30 * 86400000) return { ok: false, msg: "This payment is too old to activate. Contact support." };
+          st.hashes.push(hash);
+          st.proUntil = Math.max(Date.now(), st.proUntil) + PRO_DAYS * 86400000;
+          st.used = 0;
+          crSave(st);
+          paintCredits(); renderSidebar();
+          return { ok: true, msg: "Payment confirmed. You're on Pro for the next 7 days." };
+        }
+
+        function renderUpgradePage(root) {
+          const pro = crIsPro(), st = crState();
+          const days = Math.max(1, Math.ceil((st.proUntil - Date.now()) / 86400000));
+          const tick = (c) => '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="' + c + '" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+          const li = (t, c) => "<li>" + tick(c) + "<span>" + t + "</span></li>";
+          root.innerHTML = '<div style="display:flex;justify-content:flex-end"><button type="button" class="tv-back" id="tv-back"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>Back to chat</button></div>' +
+            '<div class="up-hero"><span class="up-eyebrow">XEROVIN PRO</span><h1>Build more.<br>Wait less.</h1><p>Get 5 credits every day for a full week. That is about 50 messages a day across chat, slides, apps, 3D and images, for just $1.</p></div>' +
+            (pro ? '<div class="up-status"><b>You are on Pro</b> · ' + days + (days === 1 ? " day" : " days") + " left · " + fmtC(crLeft()) + " of " + fmtC(PRO_DAILY) + " credits left today</div>" : "") +
+            '<div class="up-plans"><div class="up-plan"><h3>Free</h3><div class="up-price">$0<small> / forever</small></div><p class="up-sub">Great for trying things out</p><ul class="up-list">' +
+              li("<b>2 credits</b> every day (about 20 messages)", "#0a0a0a") + li("Chat, Slides, Build, 3D Make and Images", "#0a0a0a") + li("Live preview and chat history", "#0a0a0a") + li("Credits reset every day", "#0a0a0a") +
+              '</ul><div class="up-free-btn">' + (pro ? "Included" : "Your current plan") + '</div></div>' +
+            '<div class="up-plan pro"><span class="up-ribbon">BEST VALUE</span><h3>Pro Weekly</h3><div class="up-price">$1<small> / week</small></div><p class="up-sub">One payment. No subscription to cancel.</p><ul class="up-list">' +
+              li("<b>5 credits every day</b> for 7 days (about 50 messages)", "#f5d77a") + li("<b>2.5x more</b> than the free plan", "#f5d77a") + li("Works in every tool: chat, slides, apps, 3D and images", "#f5d77a") + li("PRO badge on your account", "#f5d77a") + li("Unlocks as soon as your payment is confirmed", "#f5d77a") +
+              '</ul><button type="button" class="up-pay" id="up-pay"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M7.1 21H3.8L6.2 4.5A1 1 0 0 1 7.2 3.6h6.2c3.1 0 5 1.6 4.5 4.4-.6 3.6-3 5-6.2 5H9.3L8.3 20a1 1 0 0 1-1.2 1Z"/></svg>' + (pro ? "Extend with $1 on PayPal" : "Pay $1 with PayPal") + '</button></div></div>' +
+            '<div class="up-steps"><div class="up-step"><div class="up-num">1</div><b>Pay $1 on PayPal</b>A secure PayPal page opens in a new tab.</div>' +
+              '<div class="up-step"><div class="up-num">2</div><b>Copy your Transaction ID</b>It is on your PayPal receipt and in the confirmation email.</div>' +
+              '<div class="up-step"><div class="up-num">3</div><b>Paste it below</b>Pro unlocks once your payment is confirmed.</div></div>' +
+            '<div class="up-unlock"><h4>Already paid? Unlock Pro</h4><p>Paste the PayPal Transaction ID from your receipt. Credits are added only after the payment is confirmed.</p>' +
+              '<div style="display:flex;gap:8px;flex-wrap:wrap"><input id="up-txn" class="tv-field" style="flex:1;min-width:220px" placeholder="Transaction ID, e.g. 5TY05013RG002845M" autocomplete="off" spellcheck="false"><button type="button" class="xv-btn" id="up-unlock" style="height:42px;padding:0 22px">Unlock Pro</button></div><div id="up-msg" class="up-msg"></div></div>' +
+            '<div class="up-faq"><details><summary>How do credits work?</summary>Every message, slide deck, app, 3D scene or image costs about 0.1 credit. Free accounts get 2 credits a day, and Pro gets 5. Unused credits don\'t carry over, and they reset each day.</details>' +
+              '<details><summary>When do I get Pro after paying?</summary>Pro starts once your payment is confirmed and you paste your Transaction ID above. If it says "not confirmed yet", wait a little and try again.</details>' +
+              '<details><summary>Is it a subscription?</summary>No. It is a one-time $1 payment for 7 days of Pro. Pay again whenever you want another week.</details></div>';
+          bindBack();
+          $("up-pay").addEventListener("click", () => {
+            window.open(PAYPAL_LINK, "_blank", "noopener");
+            $("up-msg").className = "up-msg"; $("up-msg").textContent = "After you pay, paste your PayPal Transaction ID here and press Unlock Pro.";
+            $("up-txn").focus();
+          });
+          const unlock = async () => {
+            const b = $("up-unlock"), m = $("up-msg");
+            b.disabled = true; b.textContent = "Checking…"; m.className = "up-msg"; m.textContent = "";
+            const r = await activatePro($("up-txn").value);
+            b.disabled = false; b.textContent = "Unlock Pro";
+            m.className = "up-msg " + (r.ok ? "ok" : "bad"); m.textContent = r.msg;
+            if (r.ok) setTimeout(() => renderUpgradePage(root), 900);
+          };
+          $("up-unlock").addEventListener("click", unlock);
+          $("up-txn").addEventListener("keydown", (e) => { if (e.key === "Enter") unlock(); });
+        }
+
         async function executeStream(payload) {
           setErrorBanner(null);
 
@@ -4193,7 +4612,7 @@ const fmtWhen = (t) => new Date(t).toLocaleString([], { dateStyle: "medium", tim
             const parts = (cand && cand.content && cand.content.parts) || [];
             for (const part of parts) {
               if (part.text && !part.thought) {
-                if (firstTokenMs === undefined) firstTokenMs = Math.round(performance.now() - t0);
+                if (firstTokenMs === undefined) { firstTokenMs = Math.round(performance.now() - t0); spendCredit(); }
                 assistantMsg.content += part.text;
                 added = true;
               }
@@ -4293,6 +4712,7 @@ const fmtWhen = (t) => new Date(t).toLocaleString([], { dateStyle: "medium", tim
             return;
           }
 
+          if (!hasCredit()) { creditWall(); return; }
           els.promptTextarea.value = "";
           const payload = {
             prompt: text,
@@ -4614,6 +5034,18 @@ const fmtWhen = (t) => new Date(t).toLocaleString([], { dateStyle: "medium", tim
             if (!r.ok) throw bad("Couldn't remove the key (" + r.status + ").", 500);
             return keyStatus("");
           }
+          if (action === "pay") {
+            const txn = normTxn(opts.body && opts.body.txn);
+            if (txn.length < 8) throw bad("Paste the full PayPal Transaction ID first.", 400);
+            const hash = await sha256Hex(txn);
+            const revoke = opts.body && opts.body.op === "revoke";
+            const r = revoke
+              ? await fetch(sbBase() + "/rest/v1/config?key=eq.paid_" + hash, { method: "DELETE", headers: { ...sbHeaders(token), Prefer: "return=minimal" } })
+              : await fetch(sbBase() + "/rest/v1/config?on_conflict=key", { method: "POST", headers: { ...sbHeaders(token), Prefer: "resolution=merge-duplicates,return=minimal" }, body: JSON.stringify({ key: "paid_" + hash, value: String(Date.now()) }) });
+            if (r.status === 401) { admSignOut(); throw bad("Please sign in again.", 401); }
+            if (!r.ok) throw bad("Couldn't save (" + r.status + "). Check the Supabase policies.", 500);
+            return { message: revoke ? "Revoked. That payment can no longer unlock Pro." : "Approved. The customer can now unlock Pro with that Transaction ID." };
+          }
           throw bad("Visitor stats need a server, which this one-file version doesn't have.", 501, "NO_STATS");
         }
 
@@ -4867,6 +5299,16 @@ const fmtWhen = (t) => new Date(t).toLocaleString([], { dateStyle: "medium", tim
                 <p class="adm-note" style="margin-top:6px;"><button id="adm-key-remove" type="button" class="adm-linkbtn hidden" style="margin-left:0;">Remove key (turns the AI off)</button><button id="adm-key-recheck" type="button" class="adm-linkbtn" style="margin-left:16px;">Re-check connection</button></p>
               </section>
 
+              <section class="adm-card">
+                <div class="adm-card-head"><h3>Approve a payment</h3><span class="adm-sub">After a $1 PayPal payment arrives, paste its Transaction ID here to unlock Pro for that customer.</span></div>
+                <div class="adm-key-row">
+                  <input id="adm-pay-in" class="field-input" type="text" autocomplete="off" spellcheck="false" placeholder="PayPal Transaction ID, e.g. 5TY05013RG002845M" />
+                  <button id="adm-pay-ok" type="button" class="btn-solid" style="height:40px;">Approve</button>
+                  <button id="adm-pay-no" type="button" class="btn-outline" style="height:40px;">Revoke</button>
+                </div>
+                <p id="adm-pay-msg" class="adm-note">Find the ID in PayPal under Activity, or in the payment email. The customer pastes the same ID on the Upgrade page.</p>
+              </section>
+
               <div id="adm-stats" class="adm-stats"></div>
 
               <section class="adm-card">
@@ -4894,6 +5336,20 @@ const fmtWhen = (t) => new Date(t).toLocaleString([], { dateStyle: "medium", tim
               <p class="adm-sub">Counts are unique visitors per day. Visitors are anonymous: no names or IP addresses are stored.</p>
             </div>`;
 
+          const payRun = async (op) => {
+            const msg = document.getElementById("adm-pay-msg");
+            const inp = document.getElementById("adm-pay-in");
+            msg.textContent = "Working…";
+            try {
+              const out = await admApi("pay", { method: "POST", body: { txn: inp.value, op } });
+              msg.textContent = out.message;
+              if (op === "approve") inp.value = "";
+            } catch (e) {
+              msg.textContent = e.message;
+            }
+          };
+          document.getElementById("adm-pay-ok").addEventListener("click", () => payRun("approve"));
+          document.getElementById("adm-pay-no").addEventListener("click", () => payRun("revoke"));
           document.getElementById("adm-out").addEventListener("click", admSignOut);
           document.getElementById("adm-site").addEventListener("click", admClose);
           document.getElementById("adm-refresh").addEventListener("click", () => loadAdmin("force"));
