@@ -3362,6 +3362,15 @@
           { id: "github", domain: "github.com", name: "GitHub", by: "Save generated pages as private Gists", kind: "github", hint: "Token with the gist permission" },
           { id: "notion", domain: "notion.so", name: "Notion", by: "Send results to Notion", unavailable: "Notion blocks requests from web pages, so it needs a small server. It can't work from a single index.html." },
         ];
+        function detectProvider(key) {
+          const k = String(key || "").trim();
+          if (k.startsWith("sk-or-")) return "openrouter";
+          if (k.startsWith("gsk_")) return "groq";
+          if (k.startsWith("sk-ant-")) return "claude";
+          if (k.startsWith("AIza")) return "gemini";
+          if (k.startsWith("sk-")) return "openai";
+          return "gemini";
+        }
         const CONN_KEY = "xerovin_conn";
         const ENGINE_KEY = "xerovin_engine";
         const loadConn = () => { try { return JSON.parse(localStorage.getItem(CONN_KEY) || "{}"); } catch { return {}; } };
@@ -3433,9 +3442,9 @@
           return new Response(res.body.pipeThrough(ts), { status: 200, headers: { "Content-Type": "text/event-stream" } });
         }
 
-        async function providerChat(engine, body, signal) {
+        async function providerChat(engine, body, signal, override) {
           const def = CONNECTORS.find((c) => c.id === engine);
-          const cfg = loadConn()[engine] || {};
+          const cfg = override || loadConn()[engine] || {};
           const model = cfg.model || def.model;
           let res;
           try {
@@ -3477,6 +3486,7 @@
           const eng = getEngine();
           if (eng !== "gemini") return providerChat(eng, body, signal);
           const key = await fetchSharedKey(true);
+          if (key && detectProvider(key) !== "gemini") return providerChat(detectProvider(key), body, signal, { key, model: keyCache.model });
           if (!key) return jsonResponse(503, "API invalid: no API key is connected. The site owner needs to add one.");
           const out = await geminiAsk(key, body, signal);
           if (out.failure) {
@@ -4865,9 +4875,11 @@ const fmtWhen = (t) => new Date(t).toLocaleString([], { dateStyle: "medium", tim
           setTimeout(() => {
             if (!admToken() && location.hash !== "#admin") post("hit");
           }, 1200);
-          setInterval(() => {
-            if (document.visibilityState === "visible" && !admToken() && location.hash !== "#admin") post("beat");
-          }, 30000);
+          const beat = () => {
+            if (!admToken() && location.hash !== "#admin") post("beat");
+          };
+          setInterval(beat, 25000);
+          document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") beat(); });
         }
 
         // ── ADMIN PANEL (open it at xerovin.com/#admin) ─────────────────────────
@@ -4893,18 +4905,17 @@ const fmtWhen = (t) => new Date(t).toLocaleString([], { dateStyle: "medium", tim
         };
         const KEY_ROW = "/rest/v1/config?key=eq.gemini";
 
-        let keyCache = { v: "", at: 0 };
+        let keyCache = { v: "", model: "", at: 0 };
         async function fetchSharedKey(useCache) {
           if (!fbReady()) return "";
           if (useCache && keyCache.v && Date.now() - keyCache.at < 20000) return keyCache.v;
           try {
-            const r = await fetch(sbBase() + KEY_ROW + "&select=value", { headers: sbHeaders(), cache: "no-store" });
+            const r = await fetch(sbBase() + "/rest/v1/config?key=in.(gemini,model)&select=key,value", { headers: sbHeaders(), cache: "no-store" });
             if (!r.ok) return "";
             const rows = await r.json();
-            const v = rows && rows[0] && rows[0].value;
-            const out = typeof v === "string" ? v.trim() : "";
-            keyCache = { v: out, at: Date.now() };
-            return out;
+            const get = (k) => { const row = (rows || []).find((x) => x.key === k); return row && typeof row.value === "string" ? row.value.trim() : ""; };
+            keyCache = { v: get("gemini"), model: get("model"), at: Date.now() };
+            return keyCache.v;
           } catch {
             return "";
           }
@@ -4927,12 +4938,24 @@ const fmtWhen = (t) => new Date(t).toLocaleString([], { dateStyle: "medium", tim
 
         const maskKey = (key) => (key.length > 10 ? key.slice(0, 4) + "…" + key.slice(-4) : "••••");
 
-        async function keyStatus(key) {
+        async function keyStatus(key, model) {
           if (!key) return { connected: false, masked: "", message: "No API key is saved. The AI is switched off for everyone." };
-          const out = await geminiAsk(key, { depth: "low", system: "Reply with one short word.", contents: [{ role: "user", parts: [{ text: "Say OK" }] }] });
-          if (out.failure) return { connected: false, masked: maskKey(key), message: "Google refused this key: " + out.failure.message };
+          const prov = detectProvider(key);
+          const test = { system: "Reply with one short word.", contents: [{ role: "user", parts: [{ text: "Say OK" }] }] };
+          if (prov !== "gemini") {
+            const def = CONNECTORS.find((c) => c.id === prov);
+            const res = await providerChat(prov, test, undefined, { key, model });
+            if (!res.ok) return { connected: false, masked: maskKey(key), message: await readApiError(res) };
+            try { await res.text(); } catch { /* ok */ }
+            return { connected: true, masked: maskKey(key), message: "Connected through " + def.name + " (" + (model || def.model) + "). The AI is working for every visitor." };
+          }
+          const out = await geminiAsk(key, { depth: "low", ...test });
+          if (out.failure) {
+            const loc = /location/i.test(out.failure.message) ? " Google doesn't allow the Gemini API from this location. Use an OpenRouter, OpenAI, Groq or Claude key instead." : "";
+            return { connected: false, masked: maskKey(key), message: "Google refused this key: " + out.failure.message + loc };
+          }
           try { await out.res.text(); } catch { /* ok */ }
-          return { connected: true, masked: maskKey(key), model: out.model, message: "Connected. The AI is working for every visitor." };
+          return { connected: true, masked: maskKey(key), model: out.model, message: "Connected through Gemini. The AI is working for every visitor." };
         }
 
         async function admApi(action, opts = {}) {
@@ -5009,11 +5032,12 @@ const fmtWhen = (t) => new Date(t).toLocaleString([], { dateStyle: "medium", tim
             throw bad("Please sign in again.", 401);
           }
           const expired = (r) => r.status === 401 || r.status === 403;
-          if (action === "key") return keyStatus(await fetchSharedKey());
+          if (action === "key") { const kk = await fetchSharedKey(); return keyStatus(kk, keyCache.model); }
           if (action === "keyset") {
             const key = String((opts.body && opts.body.key) || "").trim();
-            if (key.length < 20) throw bad("That doesn't look like a Gemini API key.", 400);
-            const test = await keyStatus(key);
+            if (key.length < 20) throw bad("That doesn't look like an API key.", 400);
+            const model = String((opts.body && opts.body.model) || "").trim();
+            const test = await keyStatus(key, model);
             if (!test.connected) throw bad(test.message, 400);
             const r = await fetch(sbBase() + "/rest/v1/config?on_conflict=key", {
               method: "POST",
@@ -5025,15 +5049,26 @@ const fmtWhen = (t) => new Date(t).toLocaleString([], { dateStyle: "medium", tim
               throw bad("Please sign in again.", 401);
             }
             if (!r.ok) throw bad("Couldn't save the key (" + r.status + "). Check the Supabase policies.", 500);
+            if (model) {
+              await fetch(sbBase() + "/rest/v1/config?on_conflict=key", {
+                method: "POST",
+                headers: { ...sbHeaders(token), Prefer: "resolution=merge-duplicates,return=minimal" },
+                body: JSON.stringify({ key: "model", value: model }),
+              });
+            } else {
+              await fetch(sbBase() + "/rest/v1/config?key=eq.model", { method: "DELETE", headers: { ...sbHeaders(token), Prefer: "return=minimal" } });
+            }
+            keyCache = { v: key, model, at: Date.now() };
             return test;
           }
           if (action === "keydel") {
-            const r = await fetch(sbBase() + KEY_ROW, { method: "DELETE", headers: { ...sbHeaders(token), Prefer: "return=minimal" } });
+            const r = await fetch(sbBase() + "/rest/v1/config?key=in.(gemini,model)", { method: "DELETE", headers: { ...sbHeaders(token), Prefer: "return=minimal" } });
             if (r.status === 401) {
               admSignOut();
               throw bad("Please sign in again.", 401);
             }
             if (!r.ok) throw bad("Couldn't remove the key (" + r.status + ").", 500);
+            keyCache = { v: "", model: "", at: 0 };
             return keyStatus("");
           }
           if (action === "pay") {
@@ -5302,7 +5337,8 @@ const fmtWhen = (t) => new Date(t).toLocaleString([], { dateStyle: "medium", tim
               <section class="adm-card">
                 <div class="adm-card-head"><h3>AI connection</h3><span class="adm-sub">The key you save here powers the AI for every visitor.</span></div>
                 <form id="adm-key-form" class="adm-key-row" novalidate>
-                  <input id="adm-key-input" class="field-input" type="password" autocomplete="off" spellcheck="false" placeholder="Paste your Gemini API key" />
+                  <input id="adm-key-input" class="field-input" type="password" autocomplete="off" spellcheck="false" placeholder="Paste your API key (Gemini, OpenRouter, OpenAI, Groq or Claude)" />
+                  <input id="adm-model-input" class="field-input" type="text" autocomplete="off" spellcheck="false" placeholder="Model (optional)" style="max-width:220px" />
                   <button id="adm-key-save" type="submit" class="btn-solid" style="height:40px;">Save &amp; connect</button>
                   <span id="adm-pill" class="adm-pill adm-wait"><i></i>Checking…</span>
                 </form>
@@ -5402,7 +5438,7 @@ const fmtWhen = (t) => new Date(t).toLocaleString([], { dateStyle: "medium", tim
             btn.disabled = true;
             btn.textContent = "Connecting…";
             try {
-              const k = await admApi("keyset", { method: "POST", body: { key: input.value } });
+              const k = await admApi("keyset", { method: "POST", body: { key: input.value, model: document.getElementById("adm-model-input").value } });
               input.value = "";
               paintKey(k);
             } catch (ex) {
