@@ -4447,6 +4447,7 @@ const fmtWhen = (t) => new Date(t).toLocaleString([], { dateStyle: "medium", tim
         const hasCredit = () => crLeft() >= MSG_COST;
         function spendCredit() {
           const st = crState(); st.used += MSG_COST; crSave(st); paintCredits();
+          try { if (window.xvTrack && !admToken()) window.xvTrack("msg"); } catch { /* ignore */ }
         }
         function creditWall() {
           showToast(crIsPro() ? "You've used today's Pro credits. They reset tomorrow." : "You're out of credits for today. Upgrade for 5 daily credits.");
@@ -4846,25 +4847,26 @@ const fmtWhen = (t) => new Date(t).toLocaleString([], { dateStyle: "medium", tim
         }
 
         function trackVisit() {
-          return; // no server in one-file mode
+          if (!fbReady()) return;
           const id = visitorId();
-          const post = (action) => {
+          const post = (kind) => {
             try {
-              fetch("/api/app?action=" + action, {
+              fetch(sbBase() + "/functions/v1/track", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ id }),
+                headers: { "Content-Type": "application/json", apikey: SUPABASE_ANON_KEY },
+                body: JSON.stringify({ id, kind }),
                 keepalive: true,
               }).catch(() => {});
             } catch {
               // never break the site for analytics
             }
           };
+          window.xvTrack = post;
           setTimeout(() => {
             if (!admToken() && location.hash !== "#admin") post("hit");
           }, 1200);
           setInterval(() => {
-            if (document.visibilityState === "visible" && !admToken()) post("beat");
+            if (document.visibilityState === "visible" && !admToken() && location.hash !== "#admin") post("beat");
           }, 30000);
         }
 
@@ -5046,7 +5048,16 @@ const fmtWhen = (t) => new Date(t).toLocaleString([], { dateStyle: "medium", tim
             if (!r.ok) throw bad("Couldn't save (" + r.status + "). Check the Supabase policies.", 500);
             return { message: revoke ? "Revoked. That payment can no longer unlock Pro." : "Approved. The customer can now unlock Pro with that Transaction ID." };
           }
-          throw bad("Visitor stats need a server, which this one-file version doesn't have.", 501, "NO_STATS");
+          if (action === "stats") {
+            let r;
+            try { r = await fetch(sbBase() + "/rest/v1/rpc/admin_stats", { method: "POST", headers: sbHeaders(token), body: "{}" }); }
+            catch { throw bad("Network error. Check your connection.", 502); }
+            if (r.status === 401) { admSignOut(); throw bad("Please sign in again.", 401); }
+            if (r.status === 404) throw bad("Visitor tracking isn't set up yet.", 501, "NO_STATS");
+            if (!r.ok) throw bad("Couldn't load stats (" + r.status + ").", 500);
+            return r.json();
+          }
+          throw bad("Unknown action.", 400);
         }
 
         function admSignOut() {
@@ -5259,7 +5270,7 @@ const fmtWhen = (t) => new Date(t).toLocaleString([], { dateStyle: "medium", tim
                 if (e.message === "Please sign in again.") return;
                 const box = document.getElementById("adm-setup");
                 box.classList.remove("hidden");
-                box.innerHTML = e.code === "NO_STATS" ? "Visitor stats are off: a single index.html has no server to count visitors." : "Couldn't load stats: " + escapeHtml(e.message);
+                box.innerHTML = e.code === "NO_STATS" ? "Visitor tracking isn't set up yet. Run visitors-setup.sql in Supabase and deploy the track function, then press Refresh." : "Couldn't load stats: " + escapeHtml(e.message);
               }
             ),
           ];
