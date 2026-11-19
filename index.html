@@ -2260,13 +2260,13 @@
         // in your Supabase database. Removing it there disconnects the AI for everyone.
         // ── ONE-TIME SETUP: paste these two values from your free Supabase project (see instructions) ──
         // They are NOT secret. Your Gemini key and admin password never go in this file.
-        const SUPABASE_URL = "PASTE_SUPABASE_PROJECT_URL"; // e.g. https://abcdxyz.supabase.co
-        const SUPABASE_ANON_KEY = "PASTE_SUPABASE_ANON_OR_PUBLISHABLE_KEY";
+        const SUPABASE_URL = "https://mvdhltrgvojqbvmdtite.supabase.co"; // e.g. https://abcdxyz.supabase.co
+        const SUPABASE_ANON_KEY = "sb_publishable_bRu8KK7EQKF4suRy2WhFVQ_WBE8YqNL";
         const CHAT_ENDPOINT = "gemini-direct";
         const GEMINI_MODELS = [
-          { id: "gemini-3.5-flash-lite", levels: { low: "MINIMAL", medium: "MINIMAL", high: "LOW", xhigh: "MEDIUM" } },
           { id: "gemini-3.8-flash", levels: { low: "MINIMAL", medium: "LOW", high: "MEDIUM", xhigh: "HIGH" } },
           { id: "gemini-3.6-flash", levels: { low: "MINIMAL", medium: "LOW", high: "MEDIUM", xhigh: "HIGH" } },
+          { id: "gemini-3.5-flash-lite", levels: { low: "MINIMAL", medium: "LOW", high: "MEDIUM", xhigh: "HIGH" } },
         ];
         const MAX_HISTORY_MESSAGES = 24;
 
@@ -2282,7 +2282,7 @@
         const APPLE_SDK = "https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js";
 
         const BASE_PROMPT =
-          "You are XEROVIN, a fast, precise AI engineering assistant. Lead with the answer and keep prose tight. Formatting rules: use only # / ## / ### headings, '- ' bullets, numbered lists like '1. ', **bold**, `inline code`, and fenced code blocks that carry a language tag. Never use tables, italics, HTML or markdown links in prose. Exception: when asked to build anything visual or interactive (a page, UI, component, game, animation, chart or SVG), reply with ONE complete self-contained ```html block (inline CSS and JS) so it can be previewed live, then a short note.";
+          "You are XEROVIN, a friendly, capable AI assistant for coding, writing, learning, ideas and everyday questions. Reply naturally in the user's language and tone. Give complete, accurate answers and match the length to the question: short for simple things, thorough when the task needs it. Think before you answer, and double-check facts, math and code. If you are unsure or something may be out of date, say so plainly instead of guessing. If a request is ambiguous, make a sensible assumption, mention it in a few words, and still help right away. Be helpful and relaxed: do not lecture, do not add needless warnings, and do not refuse reasonable requests. Formatting (the chat displays these): # / ## / ### headings, '- ' bullets, numbered lists like '1. ', **bold**, `inline code`, and fenced code blocks that carry a language tag. Avoid tables, HTML and markdown links in prose. Exception: when asked to build anything visual or interactive (a page, UI, component, game, animation, chart or SVG), reply with ONE complete self-contained ```html block (inline CSS and JS) that works as written, so it can be previewed live, then a short note.";
         const MODE_PROMPTS = {
           chat: "",
           architect:
